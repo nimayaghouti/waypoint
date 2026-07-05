@@ -1,0 +1,10 @@
+{
+  "HomePage": {
+    "title": "Welcome to Waypoint 🧭",
+    "description": "Plan your group trips easily and efficiently."
+  },
+  "LocaleSwitcher": {
+    "en": "English",
+    "fa": "Persian"
+  }
+}
