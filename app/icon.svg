@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="grad-left" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="hsl(195, 75%, 32%)" />   
+      <stop offset="60%" stop-color="hsl(25, 85%, 55%)" />    
+      <stop offset="100%" stop-color="hsl(25, 85%, 55%)" />   
+    </linearGradient>
+
+    <linearGradient id="grad-right" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="hsl(25, 85%, 55%)" />     
+      <stop offset="40%" stop-color="hsl(25, 85%, 55%)" />    
+      <stop offset="100%" stop-color="hsl(210, 35%, 30%)" />  
+    </linearGradient>
+
+    <filter id="intersection-shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3.5" />
+    </filter>
+
+    <mask id="ribbon-mask">
+      <path d="M 20,50 
+               C 10,105 60,180 100,140 
+               C 140,100 130,55 100,55" 
+            fill="none" 
+            stroke="white" 
+            stroke-width="28" 
+            stroke-linecap="round" />
+    </mask>
+
+    <clipPath id="shadow-clip">
+      <rect x="0" y="100" width="200" height="100" />
+    </clipPath>
+  </defs>
+
+  <path d="M 20,50 
+           C 10,105 60,180 100,140 
+           C 140,100 130,55 100,55" 
+        fill="none" 
+        stroke="url(#grad-left)" 
+        stroke-width="28" 
+        stroke-linecap="round" />
+
+  <g mask="url(#ribbon-mask)" clip-path="url(#shadow-clip)">
+    <path d="M 100,55 
+             C 70,55 60,100 100,140 
+             C 140,180 190,105 180,50" 
+          fill="none" 
+          stroke="hsla(210, 30%, 15%, 0.35)" 
+          stroke-width="28" 
+          stroke-linecap="round" 
+          filter="url(#intersection-shadow)" 
+          transform="translate(0, 4)" />
+  </g>
+
+  <path d="M 100,55 
+           C 70,55 60,100 100,140 
+           C 140,180 190,105 180,50" 
+        fill="none" 
+        stroke="url(#grad-right)" 
+        stroke-width="28" 
+        stroke-linecap="round" />
+
+  <circle cx="100" cy="84" r="6" fill="hsl(25, 85%, 55%)" />
+</svg>
