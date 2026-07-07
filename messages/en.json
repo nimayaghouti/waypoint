@@ -1,7 +1,17 @@
 {
+  "Metadata": {
+    "siteName": "Waypoint",
+    "title": {
+      "template": "Waypoint | %s",
+      "default": "Waypoint | Group Travel Planning"
+    },
+    "description": "Plan your group trips easily and efficiently with Waypoint."
+  },
   "HomePage": {
     "title": "Welcome to Waypoint 🧭",
-    "description": "Plan your group trips easily and efficiently."
+    "description": "Plan your group trips easily and efficiently.",
+    "metaTitle": "Home",
+    "metaDescription": "Start planning your next group adventure with Waypoint today."
   },
   "LocaleSwitcher": {
     "en": "English",

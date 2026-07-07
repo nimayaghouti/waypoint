@@ -1,5 +1,6 @@
+import { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { getMessages, getTranslations } from 'next-intl/server';
 import localFont from 'next/font/local';
 
 import '../globals.css';
@@ -8,13 +9,32 @@ const plusJakartaSans = localFont({
   src: '../fonts/PlusJakartaSans/PlusJakartaSans[wght].woff2',
   variable: '--font-plus-jakarta-sans',
   adjustFontFallback: false,
+  preload: false,
 });
 
 const vazirmatn = localFont({
   src: '../fonts/vazirmatn/Vazirmatn[wght].woff2',
   variable: '--font-vazirmatn',
   adjustFontFallback: false,
+  preload: false,
 });
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Metadata' });
+
+  return {
+    title: {
+      template: t('title.template'),
+      default: t('title.default'),
+    },
+    description: t('description'),
+  };
+}
 
 export default async function LocaleLayout({
   children,
