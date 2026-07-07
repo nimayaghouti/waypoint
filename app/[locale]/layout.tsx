@@ -1,20 +1,45 @@
+import { DirectionProvider } from '@radix-ui/react-direction';
+import { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { getMessages, getTranslations } from 'next-intl/server';
 import localFont from 'next/font/local';
 
 import '../globals.css';
+
+import { Footer } from '@/components/layout/Footer';
+import { Header } from '@/components/layout/Header';
+import { ThemeProvider } from '@/components/providers/ThemeProvider';
 
 const plusJakartaSans = localFont({
   src: '../fonts/PlusJakartaSans/PlusJakartaSans[wght].woff2',
   variable: '--font-plus-jakarta-sans',
   adjustFontFallback: false,
+  preload: false,
 });
 
 const vazirmatn = localFont({
   src: '../fonts/vazirmatn/Vazirmatn[wght].woff2',
   variable: '--font-vazirmatn',
   adjustFontFallback: false,
+  preload: false,
 });
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Metadata' });
+
+  return {
+    title: {
+      template: t('title.template'),
+      default: t('title.default'),
+    },
+    description: t('description'),
+  };
+}
 
 export default async function LocaleLayout({
   children,
@@ -28,12 +53,30 @@ export default async function LocaleLayout({
   const dir = locale === 'fa' ? 'rtl' : 'ltr';
 
   return (
-    <html lang={locale} dir={dir}>
+    <html
+      lang={locale}
+      dir={dir}
+      className={`${plusJakartaSans.variable} ${vazirmatn.variable}`}
+      suppressHydrationWarning
+    >
       <body
-        className={`${plusJakartaSans.variable} ${vazirmatn.variable} font-sans min-h-screen bg-background antialiased flex flex-col`}
+        className={
+          'font-sans min-h-screen bg-background antialiased flex flex-col'
+        }
       >
         <NextIntlClientProvider messages={messages}>
-          {children}
+          <DirectionProvider dir={dir}>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <Header />
+              <main className="flex-1 flex flex-col">{children}</main>
+              <Footer />
+            </ThemeProvider>
+          </DirectionProvider>
         </NextIntlClientProvider>
       </body>
     </html>

@@ -1,37 +1,78 @@
 'use client';
 
-import { useLocale, useTranslations } from 'next-intl';
-import { startTransition } from 'react';
+import { Globe } from 'lucide-react';
+
+import { useTransition } from 'react';
 
 import { usePathname, useRouter } from '@/i18n/navigation';
 
-export default function LanguageSwitcher() {
-  const t = useTranslations('LocaleSwitcher');
-  const locale = useLocale();
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+
+import { cn } from '@/lib/utils';
+
+interface LanguageSwitcherProps {
+  locale: string;
+  labels: {
+    trigger: string;
+    en: string;
+    fa: string;
+  };
+}
+
+export default function LanguageSwitcher({
+  locale,
+  labels,
+}: LanguageSwitcherProps) {
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const pathname = usePathname();
 
-  function onSelectChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    const nextLocale = e.target.value;
+  function onLanguageChange(nextLocale: string) {
+    if (nextLocale === locale) return;
     startTransition(() => {
       router.replace(pathname, { locale: nextLocale });
     });
   }
 
   return (
-    <div className="flex items-center gap-2">
-      <label htmlFor="language-select" className="sr-only">
-        {t(locale as 'en' | 'fa')}
-      </label>
-      <select
-        id="language-select"
-        value={locale}
-        onChange={onSelectChange}
-        className="bg-transparent border border-gray-400 rounded p-1 text-sm outline-none"
-      >
-        <option value="en">{t('en')}</option>
-        <option value="fa">{t('fa')}</option>
-      </select>
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="hover:text-primary rounded-full cursor-pointer"
+          disabled={isPending}
+        >
+          <Globe className="h-[1.2rem] w-[1.2rem]" />
+          <span className="sr-only">{labels.trigger}</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem
+          onClick={() => onLanguageChange('en')}
+          className={cn(
+            'cursor-pointer',
+            locale === 'en' ? 'bg-muted font-bold' : '',
+          )}
+        >
+          {labels.en}
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => onLanguageChange('fa')}
+          className={cn(
+            'cursor-pointer',
+            locale === 'fa' ? 'bg-muted font-bold' : '',
+          )}
+        >
+          {labels.fa}
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

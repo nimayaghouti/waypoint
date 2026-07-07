@@ -1,6 +1,18 @@
 import { getTranslations } from 'next-intl/server';
 
-import LanguageSwitcher from '@/components/layout/LanguageSwitcher';
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'HomePage' });
+
+  return {
+    title: t('metaTitle'),
+    description: t('metaDescription'),
+  };
+}
 
 export default async function HomePage({
   params,
@@ -16,8 +28,6 @@ export default async function HomePage({
         <h1 className="text-4xl font-bold">{t('title')}</h1>
         <p className="text-lg text-gray-600">{t('description')}</p>
       </div>
-
-      <LanguageSwitcher />
     </main>
   );
 }

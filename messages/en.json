@@ -1,9 +1,32 @@
 {
+  "Metadata": {
+    "siteName": "Waypoint",
+    "title": {
+      "template": "%s | Waypoint",
+      "default": "Waypoint | Group Travel Planning"
+    },
+    "description": "Plan your group trips easily and efficiently with Waypoint."
+  },
   "HomePage": {
     "title": "Welcome to Waypoint 🧭",
-    "description": "Plan your group trips easily and efficiently."
+    "description": "Plan your group trips easily and efficiently.",
+    "metaTitle": "Home",
+    "metaDescription": "Start planning your next group adventure with Waypoint today."
   },
-  "LocaleSwitcher": {
+  "Header": {
+    "logoAlt": "Waypoint Logo"
+  },
+  "Footer": {
+    "copyright": "© 2026 Waypoint. All rights reserved."
+  },
+  "ThemeToggle": {
+    "toggle": "Toggle theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "LanguageSwitcher": {
+    "trigger": "Switch language",
     "en": "English",
     "fa": "Persian"
   }
