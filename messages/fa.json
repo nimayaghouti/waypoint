@@ -2,7 +2,7 @@
   "Metadata": {
     "siteName": "وی‌پوینت (Waypoint)",
     "title": {
-      "template": "وی‌پوینت | %s",
+      "template": "%s | وی‌پوینت",
       "default": "وی‌پوینت | برنامه‌ریزی سفرهای گروهی"
     },
     "description": "سفرهای گروهی خود را به سادگی و کارآمد با وی‌پوینت برنامه‌ریزی کنید."
@@ -13,8 +13,21 @@
     "metaTitle": "خانه",
     "metaDescription": "همین امروز برنامه‌ریزی ماجراجویی گروهی بعدی خود را با وی‌پوینت شروع کنید."
   },
-  "LocaleSwitcher": {
-    "en": "انگلیسی",
+  "Header": {
+    "logoAlt": "لوگوی وی‌پوینت"
+  },
+  "Footer": {
+    "copyright": "© ۲۰۲۶ وی‌پوینت. تمامی حقوق محفوظ است."
+  },
+  "ThemeToggle": {
+    "toggle": "تغییر پوسته",
+    "light": "روشن",
+    "dark": "تاریک",
+    "system": "سیستم"
+  },
+  "LanguageSwitcher": {
+    "trigger": "تغییر زبان",
+    "en": "English (انگلیسی)",
     "fa": "فارسی"
   }
 }
