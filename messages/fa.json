@@ -16,8 +16,20 @@
   "Header": {
     "logoAlt": "لوگوی وی‌پوینت"
   },
+  "Navigation": {
+    "home": "خانه",
+    "trips": "سفرهای من",
+    "about": "درباره ما"
+  },
   "Footer": {
-    "copyright": "© ۲۰۲۶ وی‌پوینت. تمامی حقوق محفوظ است."
+    "description": "برنامه‌ریزی آسان سفرهای گروهی. وی‌پوینت جایی است که ماجراجویی مشترک بعدی شما آغاز می‌شود.",
+    "quickLinks": "دسترسی سریع",
+    "trips": "سفرهای من",
+    "about": "درباره ما",
+    "followUs": "همراه ما باشید",
+    "copyright": "وی‌پوینت. تمامی حقوق محفوظ است.",
+    "developedWith": "توسعه یافته با",
+    "by": "توسط"
   },
   "ThemeToggle": {
     "toggle": "تغییر پوسته",
@@ -29,5 +41,63 @@
     "trigger": "تغییر زبان",
     "en": "English (انگلیسی)",
     "fa": "فارسی"
+  },
+  "Auth": {
+    "Validations": {
+      "invalidEmail": "آدرس ایمیل نامعتبر است",
+      "requiredPassword": "رمز عبور الزامی است",
+      "requiredCaptcha": "تایید کپچا الزامی است",
+      "passwordMinLength": "رمز عبور باید حداقل ۸ کاراکتر باشد",
+      "passwordRegex": "رمز عبور باید ترکیبی از حروف و اعداد باشد",
+      "passwordsMismatch": "رمز عبور و تکرار آن یکسان نیستند",
+      "invalidCaptchaServer": "کپچا نامعتبر است یا منقضی شده",
+      "emailExists": "این ایمیل قبلاً در سیستم ثبت شده است!",
+      "invalidInputs": "اطلاعات وارد شده نامعتبر است",
+      "InvalidCredentials": "ایمیل یا رمز عبور اشتباه است!",
+      "AuthError": "خطایی در ورود رخ داد!",
+      "ServerError": "خطایی در سمت سرور رخ داد!"
+    },
+    "Layout": {
+      "backToHome": "بازگشت به خانه",
+      "brandTagline": "با هم برنامه‌ریزی کنید، بهتر سفر کنید."
+    },
+    "Login": {
+      "title": "خوش آمدید",
+      "description": "ایمیل و رمز عبور خود را وارد کنید",
+      "email": "ایمیل",
+      "emailPlaceholder": "name@example.com",
+      "password": "رمز عبور",
+      "passwordPlaceholder": "••••••",
+      "forgotPassword": "رمز عبور خود را فراموش کرده‌اید؟",
+      "submitButton": "ورود",
+      "submitLoading": "در حال بررسی...",
+      "orContinueWith": "یا",
+      "googleButton": "ورود با گوگل",
+      "googleLoading": "در حال انتقال...",
+      "noAccount": "حساب کاربری ندارید؟",
+      "registerLink": "ثبت‌نام کنید",
+      "successToast": "با موفقیت وارد شدید!",
+      "conflictErrorTitle": "تداخل حساب کاربری",
+      "conflictErrorDesc": "این ایمیل قبلاً با رمز عبور ثبت شده است. لطفاً از طریق فرم ورود اقدام کنید.",
+      "oauthError": "ورود با گوگل لغو شد یا با خطا مواجه گردید."
+    },
+    "Register": {
+      "title": "ایجاد حساب کاربری",
+      "description": "اطلاعات خود را برای ثبت‌نام در وی‌پوینت وارد کنید",
+      "email": "ایمیل",
+      "emailPlaceholder": "name@example.com",
+      "password": "رمز عبور",
+      "passwordPlaceholder": "••••••••",
+      "confirmPassword": "تکرار رمز عبور",
+      "confirmPasswordPlaceholder": "••••••••",
+      "submitButton": "ایجاد حساب",
+      "submitLoading": "در حال ثبت‌نام...",
+      "orContinueWith": "یا",
+      "googleButton": "ثبت‌نام با گوگل",
+      "googleLoading": "در حال انتقال...",
+      "hasAccount": "از قبل حساب دارید؟",
+      "loginLink": "وارد شوید",
+      "successToast": "حساب شما با موفقیت ایجاد شد!"
+    }
   }
 }
