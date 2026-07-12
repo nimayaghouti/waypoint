@@ -1,8 +1,11 @@
 import { getLocale, getTranslations } from 'next-intl/server';
 import Image from 'next/image';
-import Link from 'next/link';
+
+import { Link } from '@/i18n/navigation';
 
 import LanguageSwitcher from '@/components/layout/LanguageSwitcher';
+import { Navigation } from '@/components/layout/Navigation';
+import { ScrollHeader } from '@/components/layout/ScrollHeader';
 import { ThemeToggle } from '@/components/layout/ThemeToggle';
 
 export async function Header() {
@@ -11,9 +14,10 @@ export async function Header() {
   const tHeader = await getTranslations('Header');
   const tTheme = await getTranslations('ThemeToggle');
   const tLang = await getTranslations('LanguageSwitcher');
+  const tNav = await getTranslations('Navigation');
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+    <ScrollHeader>
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-8">
         <Link
           href="/"
@@ -29,6 +33,14 @@ export async function Header() {
             Waypoint
           </span>
         </Link>
+
+        <Navigation
+          labels={{
+            home: tNav('home'),
+            trips: tNav('trips'),
+            about: tNav('about'),
+          }}
+        />
 
         <div className="flex items-center gap-2">
           <LanguageSwitcher
@@ -49,6 +61,6 @@ export async function Header() {
           />
         </div>
       </div>
-    </header>
+    </ScrollHeader>
   );
 }

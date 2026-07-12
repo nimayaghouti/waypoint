@@ -6,9 +6,8 @@ import localFont from 'next/font/local';
 
 import '../globals.css';
 
-import { Footer } from '@/components/layout/Footer';
-import { Header } from '@/components/layout/Header';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
+import { Toaster } from '@/components/ui/sonner';
 
 const plusJakartaSans = localFont({
   src: '../fonts/PlusJakartaSans/PlusJakartaSans[wght].woff2',
@@ -72,9 +71,12 @@ export default async function LocaleLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <Header />
-              <main className="flex-1 flex flex-col">{children}</main>
-              <Footer />
+              {children}
+              <Toaster
+                position={locale === 'fa' ? 'bottom-left' : 'bottom-right'}
+                richColors
+                theme="system"
+              />
             </ThemeProvider>
           </DirectionProvider>
         </NextIntlClientProvider>

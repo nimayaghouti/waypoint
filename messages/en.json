@@ -16,8 +16,20 @@
   "Header": {
     "logoAlt": "Waypoint Logo"
   },
+  "Navigation": {
+    "home": "Home",
+    "trips": "My Trips",
+    "about": "About Us"
+  },
   "Footer": {
-    "copyright": "© 2026 Waypoint. All rights reserved."
+    "description": "Plan your group trips easily and efficiently. Waypoint is where your next shared adventure begins.",
+    "quickLinks": "Quick Links",
+    "trips": "My Trips",
+    "about": "About Us",
+    "followUs": "Follow Us",
+    "copyright": "Waypoint. All rights reserved.",
+    "developedWith": "Developed with",
+    "by": "by"
   },
   "ThemeToggle": {
     "toggle": "Toggle theme",
@@ -29,5 +41,63 @@
     "trigger": "Switch language",
     "en": "English",
     "fa": "Persian"
+  },
+  "Auth": {
+    "Validations": {
+      "invalidEmail": "Invalid email address",
+      "requiredPassword": "Password is required",
+      "requiredCaptcha": "Captcha verification is required",
+      "passwordMinLength": "Password must be at least 8 characters",
+      "passwordRegex": "Password must contain letters and numbers",
+      "passwordsMismatch": "Passwords do not match",
+      "invalidCaptchaServer": "Invalid or expired captcha",
+      "emailExists": "This email is already registered",
+      "invalidInputs": "Invalid input data",
+      "InvalidCredentials": "Invalid email or password!",
+      "AuthError": "An error occurred during authentication",
+      "ServerError": "A server error occurred"
+    },
+    "Layout": {
+      "backToHome": "Back to Home",
+      "brandTagline": "Plan together, Travel better."
+    },
+    "Login": {
+      "title": "Welcome Back",
+      "description": "Enter your email and password to log in",
+      "email": "Email",
+      "emailPlaceholder": "name@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "••••••",
+      "forgotPassword": "Forgot your password?",
+      "submitButton": "Log in",
+      "submitLoading": "Logging in...",
+      "orContinueWith": "or",
+      "googleButton": "Log in with Google",
+      "googleLoading": "Redirecting...",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Sign up",
+      "successToast": "Successfully logged in!",
+      "conflictErrorTitle": "Account Conflict",
+      "conflictErrorDesc": "This email is already registered with a password. Please log in normally.",
+      "oauthError": "Google login was cancelled or failed."
+    },
+    "Register": {
+      "title": "Create an Account",
+      "description": "Enter your details to sign up for Waypoint",
+      "email": "Email",
+      "emailPlaceholder": "name@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "••••••••",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "••••••••",
+      "submitButton": "Sign up",
+      "submitLoading": "Creating account...",
+      "orContinueWith": "or",
+      "googleButton": "Sign up with Google",
+      "googleLoading": "Redirecting...",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Log in",
+      "successToast": "Account created successfully!"
+    }
   }
 }
