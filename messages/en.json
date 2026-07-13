@@ -57,6 +57,24 @@
       "AuthError": "An error occurred during authentication",
       "ServerError": "A server error occurred"
     },
+    "VerifyEmail": {
+      "title": "Email Verification",
+      "verifying": "Verifying your email address...",
+      "success": "Your email has been successfully verified!",
+      "invalidToken": "Invalid or missing token.",
+      "expiredToken": "This verification link has expired.",
+      "alreadyUsed": "This link has already been used.",
+      "userNotFound": "User not found.",
+      "backToLogin": "Go to Login",
+      "continueToApp": "Continue to App"
+    },
+    "EmailTemplate": {
+      "verifySubject": "Verify your email address - Waypoint",
+      "greeting": "Hello",
+      "verifyMessage": "Welcome to Waypoint! Please click the button below to verify your email address and activate your account.",
+      "verifyButton": "Verify Email",
+      "ignoreMessage": "If you didn't request this email, you can safely ignore it."
+    },
     "Layout": {
       "backToHome": "Back to Home",
       "brandTagline": "Plan together, Travel better."
