@@ -84,7 +84,7 @@ export default function RegisterForm({ locale, labels, valLabels }: Props) {
     }
 
     startTransition(async () => {
-      const result = await registerAction(formData);
+      const result = await registerAction(formData, locale);
 
       if (result?.fieldErrors) {
         setErrors(result.fieldErrors);
