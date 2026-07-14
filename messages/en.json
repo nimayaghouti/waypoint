@@ -31,14 +31,26 @@
     "developedWith": "Developed with",
     "by": "by"
   },
+  "UserMenu": {
+    "login": "Log in",
+    "register": "Sign up",
+    "dashboard": "Admin Dashboard",
+    "profile": "My Profile",
+    "logout": "Log out",
+    "guestName": "Guest User",
+    "logoutConfirmTitle": "Log out",
+    "logoutConfirmDesc": "Are you sure you want to log out of your account?",
+    "logoutCancel": "Cancel",
+    "logoutConfirmButton": "Log out"
+  },
   "ThemeToggle": {
-    "toggle": "Toggle theme",
+    "toggle": "Theme",
     "light": "Light",
     "dark": "Dark",
     "system": "System"
   },
   "LanguageSwitcher": {
-    "trigger": "Switch language",
+    "trigger": "Language",
     "en": "English",
     "fa": "Persian"
   },

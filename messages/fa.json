@@ -31,14 +31,26 @@
     "developedWith": "توسعه یافته با",
     "by": "توسط"
   },
+  "UserMenu": {
+    "login": "ورود به حساب",
+    "register": "ثبت‌نام",
+    "dashboard": "داشبورد مدیریت",
+    "profile": "پروفایل من",
+    "logout": "خروج از حساب",
+    "guestName": "کاربر مهمان",
+    "logoutConfirmTitle": "خروج از حساب",
+    "logoutConfirmDesc": "آیا مطمئن هستید که می‌خواهید از حساب کاربری خود خارج شوید؟",
+    "logoutCancel": "انصراف",
+    "logoutConfirmButton": "خروج"
+  },
   "ThemeToggle": {
-    "toggle": "تغییر پوسته",
+    "toggle": "پوسته",
     "light": "روشن",
     "dark": "تاریک",
     "system": "سیستم"
   },
   "LanguageSwitcher": {
-    "trigger": "تغییر زبان",
+    "trigger": "زبان",
     "en": "English (انگلیسی)",
     "fa": "فارسی"
   },
