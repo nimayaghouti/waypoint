@@ -31,14 +31,26 @@
     "developedWith": "توسعه یافته با",
     "by": "توسط"
   },
+  "UserMenu": {
+    "login": "ورود به حساب",
+    "register": "ثبت‌نام",
+    "dashboard": "داشبورد مدیریت",
+    "profile": "پروفایل من",
+    "logout": "خروج از حساب",
+    "guestName": "کاربر مهمان",
+    "logoutConfirmTitle": "خروج از حساب",
+    "logoutConfirmDesc": "آیا مطمئن هستید که می‌خواهید از حساب کاربری خود خارج شوید؟",
+    "logoutCancel": "انصراف",
+    "logoutConfirmButton": "خروج"
+  },
   "ThemeToggle": {
-    "toggle": "تغییر پوسته",
+    "toggle": "پوسته",
     "light": "روشن",
     "dark": "تاریک",
     "system": "سیستم"
   },
   "LanguageSwitcher": {
-    "trigger": "تغییر زبان",
+    "trigger": "زبان",
     "en": "English (انگلیسی)",
     "fa": "فارسی"
   },
@@ -56,6 +68,24 @@
       "InvalidCredentials": "ایمیل یا رمز عبور اشتباه است!",
       "AuthError": "خطایی در ورود رخ داد!",
       "ServerError": "خطایی در سمت سرور رخ داد!"
+    },
+    "VerifyEmail": {
+      "title": "تایید ایمیل",
+      "verifying": "در حال تایید آدرس ایمیل شما...",
+      "success": "ایمیل شما با موفقیت تایید شد!",
+      "invalidToken": "توکن نامعتبر است یا وجود ندارد.",
+      "expiredToken": "اعتبار این لینک تایید به پایان رسیده است.",
+      "alreadyUsed": "این لینک قبلاً استفاده شده است.",
+      "userNotFound": "کاربر یافت نشد.",
+      "backToLogin": "ورود به حساب",
+      "continueToApp": "ورود به برنامه"
+    },
+    "EmailTemplate": {
+      "verifySubject": "تایید آدرس ایمیل - وی‌پوینت",
+      "greeting": "سلام",
+      "verifyMessage": "به وی‌پوینت خوش آمدید! لطفاً برای تایید آدرس ایمیل و فعال‌سازی حساب خود روی دکمه زیر کلیک کنید.",
+      "verifyButton": "تایید ایمیل",
+      "ignoreMessage": "اگر شما این ایمیل را درخواست نکرده‌اید، می‌توانید آن را نادیده بگیرید."
     },
     "Layout": {
       "backToHome": "بازگشت به خانه",

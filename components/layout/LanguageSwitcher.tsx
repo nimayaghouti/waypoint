@@ -6,12 +6,12 @@ import { useTransition } from 'react';
 
 import { usePathname, useRouter } from '@/i18n/navigation';
 
-import { Button } from '@/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
 } from '@/components/ui/dropdown-menu';
 
 import { cn } from '@/lib/utils';
@@ -41,38 +41,36 @@ export default function LanguageSwitcher({
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="hover:text-primary rounded-full cursor-pointer"
-          disabled={isPending}
-        >
-          <Globe className="h-[1.2rem] w-[1.2rem]" />
-          <span className="sr-only">{labels.trigger}</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem
-          onClick={() => onLanguageChange('en')}
-          className={cn(
-            'cursor-pointer',
-            locale === 'en' ? 'bg-muted font-bold' : '',
-          )}
-        >
-          {labels.en}
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => onLanguageChange('fa')}
-          className={cn(
-            'cursor-pointer',
-            locale === 'fa' ? 'bg-muted font-bold' : '',
-          )}
-        >
-          {labels.fa}
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <DropdownMenuSub>
+      <DropdownMenuSubTrigger
+        className="cursor-pointer gap-2"
+        disabled={isPending}
+      >
+        <Globe className="size-4" />
+        <span>{labels.trigger}</span>
+      </DropdownMenuSubTrigger>
+      <DropdownMenuPortal>
+        <DropdownMenuSubContent>
+          <DropdownMenuItem
+            onClick={() => onLanguageChange('en')}
+            className={cn(
+              'cursor-pointer',
+              locale === 'en' ? 'bg-muted font-bold' : '',
+            )}
+          >
+            {labels.en}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => onLanguageChange('fa')}
+            className={cn(
+              'cursor-pointer',
+              locale === 'fa' ? 'bg-muted font-bold' : '',
+            )}
+          >
+            {labels.fa}
+          </DropdownMenuItem>
+        </DropdownMenuSubContent>
+      </DropdownMenuPortal>
+    </DropdownMenuSub>
   );
 }

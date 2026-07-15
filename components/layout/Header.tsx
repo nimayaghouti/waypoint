@@ -3,18 +3,23 @@ import Image from 'next/image';
 
 import { Link } from '@/i18n/navigation';
 
+import { auth } from '@/auth';
+
 import LanguageSwitcher from '@/components/layout/LanguageSwitcher';
 import { Navigation } from '@/components/layout/Navigation';
 import { ScrollHeader } from '@/components/layout/ScrollHeader';
 import { ThemeToggle } from '@/components/layout/ThemeToggle';
+import { UserMenu } from '@/components/layout/UserMenu';
 
 export async function Header() {
+  const session = await auth();
   const locale = await getLocale();
 
   const tHeader = await getTranslations('Header');
   const tTheme = await getTranslations('ThemeToggle');
   const tLang = await getTranslations('LanguageSwitcher');
   const tNav = await getTranslations('Navigation');
+  const tUserMenu = await getTranslations('UserMenu');
 
   return (
     <ScrollHeader>
@@ -43,22 +48,38 @@ export async function Header() {
         />
 
         <div className="flex items-center gap-2">
-          <LanguageSwitcher
-            locale={locale}
+          <UserMenu
+            user={session?.user}
             labels={{
-              trigger: tLang('trigger'),
-              en: tLang('en'),
-              fa: tLang('fa'),
+              login: tUserMenu('login'),
+              register: tUserMenu('register'),
+              dashboard: tUserMenu('dashboard'),
+              profile: tUserMenu('profile'),
+              logout: tUserMenu('logout'),
+              guestName: tUserMenu('guestName'),
+              logoutConfirmTitle: tUserMenu('logoutConfirmTitle'),
+              logoutConfirmDesc: tUserMenu('logoutConfirmDesc'),
+              logoutCancel: tUserMenu('logoutCancel'),
+              logoutConfirmButton: tUserMenu('logoutConfirmButton'),
             }}
-          />
-          <ThemeToggle
-            labels={{
-              toggle: tTheme('toggle'),
-              light: tTheme('light'),
-              dark: tTheme('dark'),
-              system: tTheme('system'),
-            }}
-          />
+          >
+            <LanguageSwitcher
+              locale={locale}
+              labels={{
+                trigger: tLang('trigger'),
+                en: tLang('en'),
+                fa: tLang('fa'),
+              }}
+            />
+            <ThemeToggle
+              labels={{
+                toggle: tTheme('toggle'),
+                light: tTheme('light'),
+                dark: tTheme('dark'),
+                system: tTheme('system'),
+              }}
+            />
+          </UserMenu>
         </div>
       </div>
     </ScrollHeader>
