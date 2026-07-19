@@ -23,7 +23,7 @@ export default async function AuthLayout({
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
       <RouteMapBackground />
-      <div className="relative z-10 w-full max-w-5xl flex flex-col gap-4 sm:gap-6">
+      <div className="relative z-10 w-full max-w-5xl flex flex-col gap-6">
         <div className="flex items-center justify-start">
           <Button
             variant="ghost"
@@ -60,7 +60,7 @@ export default async function AuthLayout({
                 </span>
               </Link>
             </div>
-            <div className="flex items-center justify-center px-0 mt-4 sm:mt-0 sm:p-4">
+            <div className="flex items-center justify-center px-0 mt-4 sm:mt-0 sm:p-4 min-h-140">
               <div className="w-full max-w-md">{children}</div>
             </div>
           </div>
