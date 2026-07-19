@@ -57,11 +57,16 @@ export default function RegisterForm({ locale, labels, valLabels }: Props) {
   const { RegisterSchema } = getAuthSchemas(valLabels);
 
   useEffect(() => {
-    if (errorParam) {
-      toast.error(valLabels.AuthError || 'OAuth Error');
+    if (errorParam === 'OAuthAccountNotLinked') {
+      toast.error(labels.conflictErrorTitle, {
+        description: labels.conflictErrorDesc,
+      });
+      router.replace('/login');
+    } else if (errorParam) {
+      toast.error(labels.oauthError);
       router.replace('/register');
     }
-  }, [errorParam, router, valLabels]);
+  }, [errorParam, router, labels]);
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
