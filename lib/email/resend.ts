@@ -1,5 +1,6 @@
 import { Resend } from 'resend';
 
+import ResetPasswordEmail from '@/components/emails/ResetPasswordEmail';
 import VerifyEmail from '@/components/emails/VerifyEmail';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -37,6 +38,34 @@ export async function sendVerificationEmail(
     return { success: true };
   } catch (error) {
     console.error('Email sending failed:', error);
+    return { success: false, error };
+  }
+}
+
+export async function sendPasswordResetEmail(
+  email: string,
+  token: string,
+  locale: string,
+  labels: EmailLabels,
+) {
+  const resetLink = `${domain}/${locale}/reset-password?token=${token}`;
+  const dir = locale === 'fa' ? 'rtl' : 'ltr';
+
+  try {
+    const { error } = await resend.emails.send({
+      from: 'Waypoint <noreply@mail.way-point.ir>',
+      to: email,
+      subject: labels.subject,
+      react: ResetPasswordEmail({
+        resetLink,
+        labels,
+        dir,
+      }) as React.ReactElement,
+    });
+
+    if (error) return { success: false, error };
+    return { success: true };
+  } catch (error) {
     return { success: false, error };
   }
 }

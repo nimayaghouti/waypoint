@@ -7,6 +7,7 @@ import RegisterSkeleton from './_components/RegisterSkeleton';
 export default async function RegisterPage() {
   const locale = await getLocale();
   const t = await getTranslations('Auth.Register');
+  const tOAuth = await getTranslations('Auth.OAuth');
   const tVal = await getTranslations('Auth.Validations');
 
   const labels = {
@@ -26,6 +27,9 @@ export default async function RegisterPage() {
     hasAccount: t('hasAccount'),
     loginLink: t('loginLink'),
     successToast: t('successToast'),
+    conflictErrorTitle: tOAuth('conflictErrorTitle'),
+    conflictErrorDesc: tOAuth('conflictErrorDesc'),
+    oauthError: tOAuth('oauthError'),
   };
 
   const validationLabels = {

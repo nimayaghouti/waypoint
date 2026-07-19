@@ -23,3 +23,19 @@ export async function generateVerificationToken(userId: string) {
 
   return token;
 }
+
+export async function generatePasswordResetToken(userId: string) {
+  const token = crypto.randomBytes(32).toString('hex');
+  const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+  const expiresAt = new Date(Date.now() + 1 * 60 * 60 * 1000);
+
+  await prisma.passwordResetToken.deleteMany({
+    where: { userId, usedAt: null },
+  });
+
+  await prisma.passwordResetToken.create({
+    data: { userId, tokenHash, expiresAt },
+  });
+
+  return token;
+}

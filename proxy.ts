@@ -17,7 +17,9 @@ export default auth(req => {
 
   const isAuthRoute =
     pathWithoutLocale.startsWith('/login') ||
-    pathWithoutLocale.startsWith('/register');
+    pathWithoutLocale.startsWith('/register') ||
+    pathWithoutLocale.startsWith('/forgot-password') ||
+    pathWithoutLocale.startsWith('/reset-password');
   const isAdminRoute = pathWithoutLocale.startsWith('/admin');
   const isUserRoute =
     pathWithoutLocale.startsWith('/trips') ||

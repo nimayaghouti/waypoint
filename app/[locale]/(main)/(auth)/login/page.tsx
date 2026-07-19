@@ -7,6 +7,7 @@ import LoginSkeleton from './_components/LoginSkeleton';
 export default async function LoginPage() {
   const locale = await getLocale();
   const t = await getTranslations('Auth.Login');
+  const tOAuth = await getTranslations('Auth.OAuth');
   const tVal = await getTranslations('Auth.Validations');
 
   const labels = {
@@ -25,9 +26,9 @@ export default async function LoginPage() {
     noAccount: t('noAccount'),
     registerLink: t('registerLink'),
     successToast: t('successToast'),
-    conflictErrorTitle: t('conflictErrorTitle'),
-    conflictErrorDesc: t('conflictErrorDesc'),
-    oauthError: t('oauthError'),
+    conflictErrorTitle: tOAuth('conflictErrorTitle'),
+    conflictErrorDesc: tOAuth('conflictErrorDesc'),
+    oauthError: tOAuth('oauthError'),
   };
 
   const validationLabels = {
