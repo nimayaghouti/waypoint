@@ -67,7 +67,8 @@
       "invalidInputs": "Invalid input data",
       "InvalidCredentials": "Invalid email or password!",
       "AuthError": "An error occurred during authentication",
-      "ServerError": "A server error occurred"
+      "ServerError": "A server error occurred",
+      "invalidOrExpiredToken": "Invalid or expired token."
     },
     "VerifyEmail": {
       "title": "Email Verification",
@@ -85,7 +86,32 @@
       "greeting": "Hello",
       "verifyMessage": "Welcome to Waypoint! Please click the button below to verify your email address and activate your account.",
       "verifyButton": "Verify Email",
-      "ignoreMessage": "If you didn't request this email, you can safely ignore it."
+      "ignoreMessage": "If you didn't request this email, you can safely ignore it.",
+      "resetSubject": "Reset your password - Waypoint",
+      "resetMessage": "We received a request to reset your password. Click the button below to choose a new one. This link will expire in 1 hour.",
+      "resetButton": "Reset Password"
+    },
+    "ForgotPassword": {
+      "title": "Forgot Password",
+      "description": "Enter your email address and we will send you a link to reset your password.",
+      "email": "Email",
+      "emailPlaceholder": "name@example.com",
+      "submitButton": "Send Reset Link",
+      "submitLoading": "Sending...",
+      "backToLogin": "Back to Login",
+      "successMessage": "If an account exists with this email, a reset link has been sent."
+    },
+    "ResetPassword": {
+      "title": "Reset Password",
+      "description": "Enter your new password below.",
+      "password": "New Password",
+      "passwordPlaceholder": "••••••••",
+      "confirmPassword": "Confirm New Password",
+      "confirmPasswordPlaceholder": "••••••••",
+      "submitButton": "Reset Password",
+      "submitLoading": "Resetting...",
+      "backToLogin": "Back to Login",
+      "invalidToken": "Invalid or missing reset token."
     },
     "Layout": {
       "backToHome": "Back to Home",
@@ -106,10 +132,7 @@
       "googleLoading": "Redirecting...",
       "noAccount": "Don't have an account?",
       "registerLink": "Sign up",
-      "successToast": "Successfully logged in!",
-      "conflictErrorTitle": "Account Conflict",
-      "conflictErrorDesc": "This email is already registered with a password. Please log in normally.",
-      "oauthError": "Google login was cancelled or failed."
+      "successToast": "Successfully logged in!"
     },
     "Register": {
       "title": "Create an Account",
@@ -128,6 +151,11 @@
       "hasAccount": "Already have an account?",
       "loginLink": "Log in",
       "successToast": "Account created successfully!"
+    },
+    "OAuth": {
+      "conflictErrorTitle": "Account Conflict",
+      "conflictErrorDesc": "This email is already registered with a password. Please log in normally.",
+      "oauthError": "Google login was cancelled or failed."
     }
   }
 }
