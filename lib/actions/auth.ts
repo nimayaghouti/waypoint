@@ -9,9 +9,15 @@ import * as z from 'zod';
 import { signIn } from '@/auth';
 
 import { verifyAltchaPayload } from '@/lib/altcha';
-import { sendVerificationEmail } from '@/lib/email/resend';
+import {
+  sendPasswordResetEmail,
+  sendVerificationEmail,
+} from '@/lib/email/resend';
 import prisma from '@/lib/prisma';
-import { generateVerificationToken } from '@/lib/tokens';
+import {
+  generatePasswordResetToken,
+  generateVerificationToken,
+} from '@/lib/tokens';
 import { getAuthSchemas } from '@/lib/validations/auth';
 
 export async function registerAction(formData: FormData, locale: string) {
@@ -152,6 +158,104 @@ export async function verifyEmailTokenAction(token: string) {
     ]);
 
     return { success: t('success') };
+  } catch (error) {
+    return { error: `Server error: ${error}` };
+  }
+}
+
+export async function forgotPasswordAction(formData: FormData, locale: string) {
+  try {
+    const t = await getTranslations('Auth.Validations');
+    const tEmail = await getTranslations('Auth.EmailTemplate');
+    const { ForgotPasswordSchema } = getAuthSchemas({
+      invalidEmail: t('invalidEmail'),
+      requiredCaptcha: t('requiredCaptcha'),
+      requiredPassword: '',
+      passwordMinLength: '',
+      passwordRegex: '',
+      passwordsMismatch: '',
+    });
+
+    const data = Object.fromEntries(formData.entries());
+    const validatedFields = ForgotPasswordSchema.safeParse(data);
+
+    if (!validatedFields.success) {
+      return { fieldErrors: z.flattenError(validatedFields.error).fieldErrors };
+    }
+
+    const { email, altcha } = validatedFields.data;
+
+    const isHuman = await verifyAltchaPayload(altcha as string);
+    if (!isHuman) return { error: t('invalidCaptchaServer') };
+
+    const user = await prisma.user.findUnique({
+      where: { email: email as string },
+    });
+
+    if (!user) {
+      return { success: true };
+    }
+
+    const token = await generatePasswordResetToken(user.id);
+
+    await sendPasswordResetEmail(email as string, token, locale, {
+      subject: tEmail('resetSubject'),
+      greeting: tEmail('greeting'),
+      message: tEmail('resetMessage'),
+      button: tEmail('resetButton'),
+      ignore: tEmail('ignoreMessage'),
+    });
+
+    return { success: true };
+  } catch (error) {
+    return { error: `Server error: ${error}` };
+  }
+}
+
+export async function resetPasswordAction(formData: FormData, token: string) {
+  try {
+    const t = await getTranslations('Auth.Validations');
+    const { ResetPasswordSchema } = getAuthSchemas({
+      passwordMinLength: t('passwordMinLength'),
+      passwordRegex: t('passwordRegex'),
+      passwordsMismatch: t('passwordsMismatch'),
+      invalidEmail: '',
+      requiredCaptcha: '',
+      requiredPassword: '',
+    });
+
+    const data = Object.fromEntries(formData.entries());
+    const validatedFields = ResetPasswordSchema.safeParse(data);
+
+    if (!validatedFields.success) {
+      return { fieldErrors: z.flattenError(validatedFields.error).fieldErrors };
+    }
+
+    const { password } = validatedFields.data;
+
+    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+    const dbToken = await prisma.passwordResetToken.findUnique({
+      where: { tokenHash },
+    });
+
+    if (!dbToken || dbToken.usedAt || dbToken.expiresAt < new Date()) {
+      return { error: t('invalidOrExpiredToken') };
+    }
+
+    const hashedPassword = await bcrypt.hash(password as string, 10);
+
+    await prisma.$transaction([
+      prisma.user.update({
+        where: { id: dbToken.userId },
+        data: { password: hashedPassword },
+      }),
+      prisma.passwordResetToken.update({
+        where: { id: dbToken.id },
+        data: { usedAt: new Date() },
+      }),
+    ]);
+
+    return { success: true };
   } catch (error) {
     return { error: `Server error: ${error}` };
   }
