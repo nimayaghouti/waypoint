@@ -2,6 +2,7 @@
 
 import { Globe } from 'lucide-react';
 
+import { useSearchParams } from 'next/navigation';
 import { useTransition } from 'react';
 
 import { usePathname, useRouter } from '@/i18n/navigation';
@@ -33,10 +34,16 @@ export default function LanguageSwitcher({
   const router = useRouter();
   const pathname = usePathname();
 
+  const searchParams = useSearchParams();
+
   function onLanguageChange(nextLocale: string) {
     if (nextLocale === locale) return;
+
+    const currentQuery = searchParams.toString();
+    const querySuffix = currentQuery ? `?${currentQuery}` : '';
+
     startTransition(() => {
-      router.replace(pathname, { locale: nextLocale });
+      router.replace(`${pathname}${querySuffix}`, { locale: nextLocale });
     });
   }
 

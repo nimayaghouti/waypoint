@@ -96,7 +96,11 @@ export default function LoginForm({ locale, labels, valLabels }: Props) {
         setLoading(false);
       } else if (result?.success) {
         toast.success(labels.successToast);
-        router.push(callbackUrl);
+
+        const cleanCallbackUrl = callbackUrl.replace(/^\/(en|fa)(\/|$)/, '/');
+        const finalUrl = cleanCallbackUrl === '/' ? '/trips' : cleanCallbackUrl;
+
+        router.push(finalUrl);
         router.refresh();
       }
     });
