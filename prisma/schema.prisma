@@ -25,6 +25,7 @@ model User {
   role          Role      @default(USER)
   
   accounts      Account[]
+  tripMemberships TripMember[]
   
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -63,4 +64,44 @@ model PasswordResetToken {
   tokenHash String    @unique
   expiresAt DateTime
   usedAt    DateTime?
+}
+
+enum TripStatus {
+  PLANNING
+  CONFIRMED
+  COMPLETED
+  ARCHIVED
+}
+
+enum TripRole {
+  OWNER
+  EDITOR
+  VIEWER
+}
+
+model Trip {
+  id            String        @id @default(cuid())
+  name          String
+  description   String?
+  coverImage    String?
+  inviteCode    String        @unique
+  status        TripStatus    @default(PLANNING)
+  createdById   String
+  
+  members       TripMember[]
+  
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model TripMember {
+  id       String    @id @default(cuid())
+  tripId   String
+  trip     Trip      @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role     TripRole  @default(EDITOR)
+  joinedAt DateTime  @default(now())
+
+  @@unique([tripId, userId]) 
 }
