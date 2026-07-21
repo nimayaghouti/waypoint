@@ -8,10 +8,26 @@
     "description": "Plan your group trips easily and efficiently with Waypoint."
   },
   "HomePage": {
-    "title": "Welcome to Waypoint 🧭",
-    "description": "Plan your group trips easily and efficiently.",
     "metaTitle": "Home",
-    "metaDescription": "Start planning your next group adventure with Waypoint today."
+    "metaDescription": "Start planning your next group adventure with Waypoint today.",
+    "heroTitle": "Plan together. Travel better.",
+    "heroSubtitle": "The ultimate collaborative platform for your group trips. Coordinate places, split expenses, and chat in real-time, all in one place.",
+    "ctaStart": "Start Planning",
+    "ctaJoin": "Join a Trip",
+    "featuresTitle": "Everything you need for a perfect trip",
+    "featCollabTitle": "Real-time Collaboration",
+    "featCollabDesc": "Vote on destinations and build itineraries together.",
+    "featExpenseTitle": "Smart Expense Splitting",
+    "featExpenseDesc": "Track who paid what and settle debts easily.",
+    "featMapTitle": "Interactive Maps",
+    "featMapDesc": "Discover places with AI and pin them on the map.",
+    "joinModalTitle": "Join a Trip",
+    "joinModalDesc": "Enter the 8-character invite code provided by the trip organizer.",
+    "inviteCodePlaceholder": "e.g. A1B2C3D4",
+    "joinSubmit": "Join Now",
+    "joinLoading": "Joining...",
+    "invalidCode": "Invalid invite code.",
+    "tripNotFound": "No trip found with this code."
   },
   "Header": {
     "logoAlt": "Waypoint Logo"
@@ -157,5 +173,37 @@
       "conflictErrorDesc": "This email is already registered with a password. Please log in normally.",
       "oauthError": "Google login was cancelled or failed."
     }
+  },
+  "TripValidations": {
+    "nameMinLength": "Trip name must be at least 3 characters",
+    "nameMaxLength": "Trip name must be less than 100 characters",
+    "descriptionMaxLength": "Description is too long",
+    "invalidUrl": "Invalid image URL"
+  },
+  "TripsDashboard": {
+    "title": "My Trips",
+    "description": "Manage and view all your upcoming and past adventures.",
+    "newTripButton": "Create New Trip",
+    "emptyTitle": "No trips found",
+    "emptyDesc": "You haven't joined or created any trips yet.",
+    "statusPLANNING": "Planning",
+    "statusCONFIRMED": "Confirmed",
+    "statusCOMPLETED": "Completed",
+    "statusARCHIVED": "Archived",
+    "roleOWNER": "Owner",
+    "roleEDITOR": "Editor",
+    "roleVIEWER": "Viewer"
+  },
+  "CreateTrip": {
+    "title": "Create a New Trip",
+    "description": "Start a new adventure and invite your friends.",
+    "nameLabel": "Trip Name",
+    "namePlaceholder": "e.g., Summer in Paris",
+    "descLabel": "Description (Optional)",
+    "descPlaceholder": "What is this trip about?",
+    "submitButton": "Create Trip",
+    "submitLoading": "Creating...",
+    "backButton": "Cancel",
+    "successToast": "Trip created successfully!"
   }
 }

@@ -43,4 +43,44 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
       },
     }),
   ],
+  callbacks: {
+    ...authConfig.callbacks,
+    async signIn({ user, account, profile }) {
+      if (
+        account?.provider === 'google' &&
+        profile?.email_verified &&
+        user.email
+      ) {
+        const existingUser = await prisma.user.findUnique({
+          where: { email: user.email },
+          select: {
+            id: true,
+            password: true,
+            emailVerified: true,
+            accounts: {
+              select: { provider: true },
+            },
+          },
+        });
+
+        if (existingUser) {
+          const hasGoogleAccount = existingUser.accounts.some(
+            acc => acc.provider === 'google',
+          );
+
+          if (existingUser.password && !hasGoogleAccount) {
+            return true;
+          }
+
+          if (!existingUser.emailVerified) {
+            await prisma.user.update({
+              where: { id: existingUser.id },
+              data: { emailVerified: new Date() },
+            });
+          }
+        }
+      }
+      return true;
+    },
+  },
 });
