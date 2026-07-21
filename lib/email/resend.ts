@@ -3,8 +3,10 @@ import { Resend } from 'resend';
 import ResetPasswordEmail from '@/components/emails/ResetPasswordEmail';
 import VerifyEmail from '@/components/emails/VerifyEmail';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-const domain = process.env.NEXT_PUBLIC_APP_URL;
+const resend = new Resend(
+  process.env.RESEND_API_KEY || 're_dummy_key_for_build_bypass',
+);
+const domain = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
 export interface EmailLabels {
   subject: string;
