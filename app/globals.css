@@ -8,6 +8,27 @@
     var(--font-vazirmatn, 'Vazirmatn'), ui-sans-serif, system-ui, sans-serif;
 }
 
+html[dir='rtl']
+  :where(
+    body,
+    p,
+    span,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    a,
+    button,
+    label,
+    input,
+    textarea,
+    div
+  ) {
+  line-height: normal;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme {
