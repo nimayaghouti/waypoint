@@ -2,9 +2,9 @@ import { Compass, Plus } from 'lucide-react';
 
 import { getTranslations } from 'next-intl/server';
 
-import { auth } from '@/auth';
-
 import { Link } from '@/i18n/navigation';
+
+import { auth } from '@/auth';
 
 import { Badge } from '@/components/ui/badge';
 import {
