@@ -205,5 +205,14 @@
     "submitLoading": "در حال ایجاد...",
     "backButton": "انصراف",
     "successToast": "سفر با موفقیت ایجاد شد!"
+  },
+  "TripNavigation": {
+    "overview": "نمای کلی",
+    "calendar": "تقویم",
+    "polls": "رای‌گیری",
+    "itinerary": "برنامه سفر",
+    "places": "مکان‌ها",
+    "expenses": "هزینه‌ها",
+    "chat": "چت"
   }
 }
