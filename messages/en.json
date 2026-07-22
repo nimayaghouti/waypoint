@@ -205,5 +205,14 @@
     "submitLoading": "Creating...",
     "backButton": "Cancel",
     "successToast": "Trip created successfully!"
+  },
+  "TripNavigation": {
+    "overview": "Overview",
+    "calendar": "Calendar",
+    "polls": "Polls",
+    "itinerary": "Itinerary",
+    "places": "Places",
+    "expenses": "Expenses",
+    "chat": "Chat"
   }
 }
