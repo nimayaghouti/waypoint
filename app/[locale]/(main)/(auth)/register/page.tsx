@@ -1,8 +1,19 @@
+import { Metadata } from 'next';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
 
 import RegisterForm from './_components/RegisterForm';
 import RegisterSkeleton from './_components/RegisterSkeleton';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Metadata' });
+  return { title: t('Register') };
+}
 
 export default async function RegisterPage() {
   const locale = await getLocale();
