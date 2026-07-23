@@ -5,7 +5,13 @@
       "template": "%s | Waypoint",
       "default": "Waypoint | Group Travel Planning"
     },
-    "description": "Plan your group trips easily and efficiently with Waypoint."
+    "description": "Plan your group trips easily and efficiently with Waypoint.",
+    "Login": "Log In",
+    "Register": "Sign Up",
+    "ForgotPassword": "Forgot Password",
+    "ResetPassword": "Reset Password",
+    "VerifyEmail": "Verify Email",
+    "Trips": "My Trips"
   },
   "HomePage": {
     "metaTitle": "Home",
