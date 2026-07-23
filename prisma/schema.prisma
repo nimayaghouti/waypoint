@@ -15,20 +15,24 @@ enum Role {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  password      String?   
-  image         String?
-  emailVerified DateTime?
-  locale        String    @default("en")
-  role          Role      @default(USER)
+  id                      String                   @id @default(cuid())
+  name                    String?
+  email                   String                   @unique
+  password                String?   
+  image                   String?
+  emailVerified           DateTime?
+  locale                  String                   @default("en")
+  role                    Role                     @default(USER)
   
-  accounts      Account[]
-  tripMemberships TripMember[]
+  accounts                Account[]
+  emailVerificationTokens EmailVerificationToken[] 
+  passwordResetTokens     PasswordResetToken[]     
+  createdTrips            Trip[]                   @relation("TripCreator")
+  tripMemberships         TripMember[]
+  availabilities          Availability[]
   
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
 }
 
 model Account {
@@ -53,6 +57,7 @@ model Account {
 model EmailVerificationToken {
   id        String    @id @default(cuid())
   userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   tokenHash String    @unique
   expiresAt DateTime
   usedAt    DateTime?
@@ -61,6 +66,7 @@ model EmailVerificationToken {
 model PasswordResetToken {
   id        String    @id @default(cuid())
   userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   tokenHash String    @unique
   expiresAt DateTime
   usedAt    DateTime?
@@ -86,9 +92,12 @@ model Trip {
   coverImage    String?
   inviteCode    String        @unique
   status        TripStatus    @default(PLANNING)
-  createdById   String
   
-  members       TripMember[]
+  createdById   String?
+  createdBy     User?         @relation("TripCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  
+  members         TripMember[]
+  availabilities  Availability[]
   
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
@@ -104,4 +113,22 @@ model TripMember {
   joinedAt DateTime  @default(now())
 
   @@unique([tripId, userId]) 
+}
+
+enum AvailabilityStatus {
+  AVAILABLE
+  MAYBE
+  UNAVAILABLE
+}
+
+model Availability {
+  id        String             @id @default(cuid())
+  tripId    String
+  trip      Trip               @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date      DateTime           @db.Date
+  status    AvailabilityStatus
+
+  @@unique([tripId, userId, date]) 
 }
