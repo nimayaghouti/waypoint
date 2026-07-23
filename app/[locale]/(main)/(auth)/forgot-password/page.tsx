@@ -1,8 +1,22 @@
+import { Metadata } from 'next';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
 
 import ForgotPasswordForm from './_components/ForgotPasswordForm';
 import ForgotPasswordSkeleton from './_components/ForgotPasswordSkeleton';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Metadata' });
+  return {
+    title: t('ForgotPassword'),
+    robots: { index: false, follow: false },
+  };
+}
 
 export default async function ForgotPasswordPage() {
   const locale = await getLocale();
