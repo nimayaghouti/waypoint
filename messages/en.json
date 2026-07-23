@@ -220,5 +220,17 @@
     "places": "Places",
     "expenses": "Expenses",
     "chat": "Chat"
+  },
+  "Calendar": {
+    "title": "Availability Calendar",
+    "description": "Mark your availability and find the best dates for everyone.",
+    "legend": "Legend",
+    "statusAVAILABLE": "Available",
+    "statusMAYBE": "Maybe",
+    "statusUNAVAILABLE": "Unavailable",
+    "statusNONE": "Not Set",
+    "bestDates": "Best Dates",
+    "noBestDates": "No perfect overlapping dates yet.",
+    "allAvailable": "Everyone is available!"
   }
 }

@@ -220,5 +220,17 @@
     "places": "مکان‌ها",
     "expenses": "هزینه‌ها",
     "chat": "چت"
+  },
+  "Calendar": {
+    "title": "تقویم هم‌فکری",
+    "description": "روزهای آزاد خود را مشخص کنید تا بهترین زمان سفر پیدا شود.",
+    "legend": "راهنما",
+    "statusAVAILABLE": "آزاد",
+    "statusMAYBE": "شاید",
+    "statusUNAVAILABLE": "درگیر",
+    "statusNONE": "مشخص نشده",
+    "bestDates": "بهترین تاریخ‌ها",
+    "noBestDates": "هنوز تاریخ ایده‌آلی پیدا نشده است.",
+    "allAvailable": "همه آماده‌ی سفرند!"
   }
 }
