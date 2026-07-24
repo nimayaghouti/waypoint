@@ -98,6 +98,7 @@ model Trip {
   
   members         TripMember[]
   availabilities  Availability[]
+  timezone String @default("UTC")
   
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt

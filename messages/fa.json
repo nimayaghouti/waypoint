@@ -231,6 +231,11 @@
     "statusNONE": "مشخص نشده",
     "bestDates": "بهترین تاریخ‌ها",
     "noBestDates": "هنوز تاریخ ایده‌آلی پیدا نشده است.",
-    "allAvailable": "همه آماده‌ی سفرند!"
+    "allAvailable": "همه آماده‌ی سفرند!",
+    "selectMultiple": "انتخاب گروهی",
+    "exitSelectMode": "پایان انتخاب",
+    "daysSelectedSuffix": "روز انتخاب شده",
+    "cancelSelection": "پاک کردن انتخاب",
+    "errorUpdate": "بروزرسانی وضعیت با خطا مواجه شد. دوباره تلاش کن."
   }
 }

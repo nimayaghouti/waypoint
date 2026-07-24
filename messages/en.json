@@ -231,6 +231,11 @@
     "statusNONE": "Not Set",
     "bestDates": "Best Dates",
     "noBestDates": "No perfect overlapping dates yet.",
-    "allAvailable": "Everyone is available!"
+    "allAvailable": "Everyone is available!",
+    "selectMultiple": "Select multiple",
+    "exitSelectMode": "Done",
+    "daysSelectedSuffix": "day(s) selected",
+    "cancelSelection": "Clear selection",
+    "errorUpdate": "Couldn't update availability. Please try again."
   }
 }
