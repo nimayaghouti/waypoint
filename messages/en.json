@@ -5,7 +5,13 @@
       "template": "%s | Waypoint",
       "default": "Waypoint | Group Travel Planning"
     },
-    "description": "Plan your group trips easily and efficiently with Waypoint."
+    "description": "Plan your group trips easily and efficiently with Waypoint.",
+    "Login": "Log In",
+    "Register": "Sign Up",
+    "ForgotPassword": "Forgot Password",
+    "ResetPassword": "Reset Password",
+    "VerifyEmail": "Verify Email",
+    "Trips": "My Trips"
   },
   "HomePage": {
     "metaTitle": "Home",
@@ -214,5 +220,22 @@
     "places": "Places",
     "expenses": "Expenses",
     "chat": "Chat"
+  },
+  "Calendar": {
+    "title": "Availability Calendar",
+    "description": "Mark your availability and find the best dates for everyone.",
+    "legend": "Legend",
+    "statusAVAILABLE": "Available",
+    "statusMAYBE": "Maybe",
+    "statusUNAVAILABLE": "Unavailable",
+    "statusNONE": "Not Set",
+    "bestDates": "Best Dates",
+    "noBestDates": "No perfect overlapping dates yet.",
+    "allAvailable": "Everyone is available!",
+    "selectMultiple": "Select multiple",
+    "exitSelectMode": "Done",
+    "daysSelectedSuffix": "day(s) selected",
+    "cancelSelection": "Clear selection",
+    "errorUpdate": "Couldn't update availability. Please try again."
   }
 }

@@ -1,5 +1,6 @@
 import { Compass, Plus } from 'lucide-react';
 
+import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 
 import { Link } from '@/i18n/navigation';
@@ -19,6 +20,19 @@ import prisma from '@/lib/prisma';
 
 import { CreateTripModal } from './_components/CreateTripModal';
 import { NewTripButton } from './_components/NewTripButton';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Metadata' });
+  return {
+    title: t('Trips'),
+    robots: { index: false, follow: false },
+  };
+}
 
 export default async function TripsDashboardPage() {
   const session = await auth();

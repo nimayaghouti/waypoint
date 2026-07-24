@@ -5,7 +5,13 @@
       "template": "%s | وی‌پوینت",
       "default": "وی‌پوینت | برنامه‌ریزی سفرهای گروهی"
     },
-    "description": "سفرهای گروهی خود را به سادگی و کارآمد با وی‌پوینت برنامه‌ریزی کنید."
+    "description": "سفرهای گروهی خود را به سادگی و کارآمد با وی‌پوینت برنامه‌ریزی کنید.",
+    "Login": "ورود به حساب",
+    "Register": "ثبت‌نام",
+    "ForgotPassword": "فراموشی رمز عبور",
+    "ResetPassword": "بازیابی رمز عبور",
+    "VerifyEmail": "تایید ایمیل",
+    "Trips": "سفرهای من"
   },
   "HomePage": {
     "metaTitle": "خانه",
@@ -214,5 +220,22 @@
     "places": "مکان‌ها",
     "expenses": "هزینه‌ها",
     "chat": "چت"
+  },
+  "Calendar": {
+    "title": "تقویم هم‌فکری",
+    "description": "روزهای آزاد خود را مشخص کنید تا بهترین زمان سفر پیدا شود.",
+    "legend": "راهنما",
+    "statusAVAILABLE": "آزاد",
+    "statusMAYBE": "شاید",
+    "statusUNAVAILABLE": "درگیر",
+    "statusNONE": "مشخص نشده",
+    "bestDates": "بهترین تاریخ‌ها",
+    "noBestDates": "هنوز تاریخ ایده‌آلی پیدا نشده است.",
+    "allAvailable": "همه آماده‌ی سفرند!",
+    "selectMultiple": "انتخاب گروهی",
+    "exitSelectMode": "پایان انتخاب",
+    "daysSelectedSuffix": "روز انتخاب شده",
+    "cancelSelection": "پاک کردن انتخاب",
+    "errorUpdate": "بروزرسانی وضعیت با خطا مواجه شد. دوباره تلاش کن."
   }
 }

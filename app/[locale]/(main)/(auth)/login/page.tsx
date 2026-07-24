@@ -1,8 +1,19 @@
+import { Metadata } from 'next';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
 
 import LoginForm from './_components/LoginForm';
 import LoginSkeleton from './_components/LoginSkeleton';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Metadata' });
+  return { title: t('Login') };
+}
 
 export default async function LoginPage() {
   const locale = await getLocale();
