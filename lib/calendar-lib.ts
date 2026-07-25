@@ -34,6 +34,12 @@ export function getWeekStartsOn(locale: string): 0 | 6 {
   return locale === 'fa' ? 6 : 0;
 }
 
+export function getWeekdayLabels(locale: string): string[] {
+  return locale === 'fa'
+    ? ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج']
+    : ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+}
+
 const PERSIAN_DIGITS = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
 
 export function toLocaleDigits(value: string, locale: string): string {
