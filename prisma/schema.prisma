@@ -30,6 +30,7 @@ model User {
   createdTrips            Trip[]                   @relation("TripCreator")
   tripMemberships         TripMember[]
   availabilities          Availability[]
+  votes                   Vote[]
   
   createdAt               DateTime                 @default(now())
   updatedAt               DateTime                 @updatedAt
@@ -98,6 +99,7 @@ model Trip {
   
   members         TripMember[]
   availabilities  Availability[]
+  polls           Poll[]
   timezone String @default("UTC")
   
   createdAt     DateTime      @default(now())
@@ -132,4 +134,42 @@ model Availability {
   status    AvailabilityStatus
 
   @@unique([tripId, userId, date]) 
+}
+
+enum PollType {
+  SINGLE
+  MULTI
+}
+
+model Poll {
+  id        String       @id @default(cuid())
+  tripId    String
+  trip      Trip         @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  question  String
+  type      PollType     @default(SINGLE)
+  
+  options   PollOption[]
+  
+  closesAt  DateTime?
+  createdAt DateTime     @default(now())
+}
+
+model PollOption {
+  id      String  @id @default(cuid())
+  pollId  String
+  poll    Poll    @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  label   String
+  placeId String? 
+  
+  votes   Vote[]
+}
+
+model Vote {
+  id           String     @id @default(cuid())
+  pollOptionId String
+  pollOption   PollOption @relation(fields: [pollOptionId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([pollOptionId, userId]) 
 }

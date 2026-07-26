@@ -11,7 +11,9 @@
     "ForgotPassword": "Forgot Password",
     "ResetPassword": "Reset Password",
     "VerifyEmail": "Verify Email",
-    "Trips": "My Trips"
+    "Trips": "My Trips",
+    "Calendar": "Calendar",
+    "Polls": "Polls"
   },
   "HomePage": {
     "metaTitle": "Home",
@@ -212,6 +214,13 @@
     "backButton": "Cancel",
     "successToast": "Trip created successfully!"
   },
+  "TripLayout": {
+    "inviteButton": "Invite Members",
+    "copyCode": "Copy Invite Code",
+    "copyLink": "Copy Invite Link",
+    "codeCopied": "Invite code copied to clipboard",
+    "linkCopied": "Invite link copied to clipboard"
+  },
   "TripNavigation": {
     "overview": "Overview",
     "calendar": "Calendar",
@@ -237,5 +246,52 @@
     "daysSelectedSuffix": "day(s) selected",
     "cancelSelection": "Clear selection",
     "errorUpdate": "Couldn't update availability. Please try again."
+  },
+  "Polls": {
+    "title": "Polls",
+    "description": "Vote on destinations, activities, and more to plan together.",
+    "newPollButton": "Create Poll",
+    "emptyTitle": "No polls yet",
+    "emptyDesc": "Start a new poll to gather opinions from your travel companions.",
+    "createTitle": "Create a New Poll",
+    "createDesc": "Ask a question and provide options for the group.",
+    "questionLabel": "Question",
+    "questionPlaceholder": "e.g., Where should we go for dinner?",
+    "typeLabel": "Voting Type",
+    "typeSingle": "Single Choice",
+    "typeSingleDescription": "Users can select only one option",
+    "typeMulti": "Multiple Choice",
+    "typeMultiDescription": "Users can select multiple options",
+    "optionsLabel": "Options",
+    "addOption": "Add Option",
+    "closesAtLabel": "Closing Date & Time",
+    "closesAtDatePlaceholder": "Pick a date",
+    "closesAtHint": "The poll will automatically close and stop accepting votes after this moment.",
+    "createButton": "Create Poll",
+    "createLoading": "Creating...",
+    "successToast": "Poll created successfully!",
+    "voteError": "Failed to register vote. Please try again.",
+    "votesCount": "{count} votes",
+    "submitVoteButton": "Submit Vote",
+    "submitVoteLoading": "Submitting...",
+    "selectAtLeastOneOption": "Select at least one option before submitting.",
+    "RetractVoteButton": "Retract vote",
+    "closePollButton": "Close poll",
+    "closePollConfirm": "Are you sure you want to close this poll early? No one will be able to vote after this.",
+    "closedBadge": "Closed",
+    "pollClosedError": "This poll is closed and no longer accepts votes.",
+    "alreadyVotedError": "You've already voted. Cancel your vote first if you want to change it.",
+    "noVoteToCancelError": "You don't have a vote to cancel.",
+    "alreadyClosedError": "This poll is already closed.",
+    "closePollDialogTitle": "Close this poll early?",
+    "closePollDialogCancel": "Cancel"
+  },
+  "PollValidations": {
+    "questionMin": "Question must be at least 5 characters.",
+    "optionRequired": "Option cannot be empty.",
+    "minOptions": "Provide at least 2 options.",
+    "closesAtRequired": "Please select a closing date and time.",
+    "closesAtInvalid": "The selected date and time is invalid.",
+    "closesAtFuture": "The closing time must be in the future."
   }
 }

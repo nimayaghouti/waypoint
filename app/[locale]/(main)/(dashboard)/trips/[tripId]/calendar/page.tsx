@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import { getLocale, getTranslations } from 'next-intl/server';
 
 import { redirect } from '@/i18n/navigation';
@@ -12,6 +13,24 @@ import {
 import prisma from '@/lib/prisma';
 
 import HeatmapCalendar from './_components/HeatmapCalendar';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ tripId: string; locale: string }>;
+}): Promise<Metadata> {
+  const { tripId, locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Metadata' });
+  const trip = await prisma.trip.findUnique({
+    where: { id: tripId },
+    select: { name: true },
+  });
+
+  return {
+    title: `${t('Calendar')} | ${trip?.name || 'Trip'}`,
+    robots: { index: false, follow: false },
+  };
+}
 
 export default async function TripCalendarPage({
   params,

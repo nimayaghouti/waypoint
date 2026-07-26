@@ -11,7 +11,9 @@
     "ForgotPassword": "فراموشی رمز عبور",
     "ResetPassword": "بازیابی رمز عبور",
     "VerifyEmail": "تایید ایمیل",
-    "Trips": "سفرهای من"
+    "Trips": "سفرهای من",
+    "Calendar": "تقویم",
+    "Polls": "رأی‌گیری‌ها"
   },
   "HomePage": {
     "metaTitle": "خانه",
@@ -212,6 +214,13 @@
     "backButton": "انصراف",
     "successToast": "سفر با موفقیت ایجاد شد!"
   },
+  "TripLayout": {
+    "inviteButton": "دعوت اعضا",
+    "copyCode": "کپی کد دعوت",
+    "copyLink": "کپی لینک دعوت",
+    "codeCopied": "کد دعوت کپی شد",
+    "linkCopied": "لینک دعوت کپی شد"
+  },
   "TripNavigation": {
     "overview": "نمای کلی",
     "calendar": "تقویم",
@@ -237,5 +246,52 @@
     "daysSelectedSuffix": "روز انتخاب شده",
     "cancelSelection": "پاک کردن انتخاب",
     "errorUpdate": "بروزرسانی وضعیت با خطا مواجه شد. دوباره تلاش کن."
+  },
+  "Polls": {
+    "title": "رأی‌گیری‌ها",
+    "description": "برای برنامه‌ریزی بهتر، روی مقصدها، فعالیت‌ها و... رأی‌گیری کنید.",
+    "newPollButton": "ایجاد رأی‌گیری",
+    "emptyTitle": "رأی‌گیری وجود ندارد",
+    "emptyDesc": "برای جمع‌آوری نظرات هم‌سفران خود، یک رأی‌گیری جدید ایجاد کنید.",
+    "createTitle": "ایجاد رأی‌گیری جدید",
+    "createDesc": "سوالی بپرسید و گزینه‌هایی را برای گروه مشخص کنید.",
+    "questionLabel": "سوال",
+    "questionPlaceholder": "مثال: برای شام کجا بریم؟",
+    "typeLabel": "نوع رأی‌گیری",
+    "typeSingle": "تک‌انتخابی",
+    "typeSingleDescription": "کاربران می‌توانند فقط یک گزینه را انتخاب کنند",
+    "typeMulti": "چندانتخابی",
+    "typeMultiDescription": "کاربران می‌توانند چند گزینه را انتخاب کنند",
+    "optionsLabel": "گزینه‌ها",
+    "addOption": "افزودن گزینه",
+    "closesAtLabel": "تاریخ و ساعت بسته‌شدن",
+    "closesAtDatePlaceholder": "انتخاب تاریخ",
+    "closesAtHint": "این رأی‌گیری بعد از این لحظه به‌طور خودکار بسته می‌شود و دیگر رأیی ثبت نخواهد شد.",
+    "createButton": "ایجاد رأی‌گیری",
+    "createLoading": "در حال ایجاد...",
+    "successToast": "رأی‌گیری با موفقیت ایجاد شد!",
+    "voteError": "ثبت رأی با خطا مواجه شد. دوباره تلاش کنید.",
+    "votesCount": "{count} رأی",
+    "submitVoteButton": "ثبت رأی",
+    "submitVoteLoading": "در حال ثبت...",
+    "selectAtLeastOneOption": "قبل از ثبت، حداقل یک گزینه را انتخاب کنید.",
+    "RetractVoteButton": "پس گرفتن رأی",
+    "closePollButton": "بستن رأی‌گیری",
+    "closePollConfirm": "مطمئنی می‌خوای این رأی‌گیری رو زودتر ببندی؟ بعد از این، دیگه کسی نمی‌تونه رأی بده.",
+    "closedBadge": "بسته‌شده",
+    "pollClosedError": "این رأی‌گیری بسته شده و دیگر رأیی پذیرفته نمی‌شود.",
+    "alreadyVotedError": "شما قبلاً رأی داده‌اید. برای تغییر رأی، ابتدا رأی خودتان را لغو کنید.",
+    "noVoteToCancelError": "شما رأیی برای لغو کردن ندارید.",
+    "alreadyClosedError": "این رأی‌گیری از قبل بسته شده است.",
+    "closePollDialogTitle": "این رأی‌گیری زودتر بسته شود؟",
+    "closePollDialogCancel": "انصراف"
+  },
+  "PollValidations": {
+    "questionMin": "سوال باید حداقل ۵ کاراکتر باشد.",
+    "optionRequired": "گزینه نمی‌تواند خالی باشد.",
+    "minOptions": "حداقل ۲ گزینه وارد کنید.",
+    "closesAtRequired": "لطفاً زمان پایان رأی‌گیری را انتخاب کنید.",
+    "closesAtInvalid": "زمان پایان رأی‌گیری معتبر نیست.",
+    "closesAtFuture": "زمان پایان رأی‌گیری باید در آینده باشد."
   }
 }
