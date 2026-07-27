@@ -13,7 +13,8 @@
     "VerifyEmail": "تایید ایمیل",
     "Trips": "سفرهای من",
     "Calendar": "تقویم",
-    "Polls": "رأی‌گیری‌ها"
+    "Polls": "رأی‌گیری‌ها",
+    "Itinerary": "برنامه سفر"
   },
   "HomePage": {
     "metaTitle": "خانه",
@@ -293,5 +294,47 @@
     "closesAtRequired": "لطفاً زمان پایان رأی‌گیری را انتخاب کنید.",
     "closesAtInvalid": "زمان پایان رأی‌گیری معتبر نیست.",
     "closesAtFuture": "زمان پایان رأی‌گیری باید در آینده باشد."
+  },
+  "Itinerary": {
+    "title": "برنامه سفر",
+    "description": "فعالیت‌های روزمره خود را برنامه‌ریزی کنید و به سادگی مرتب کنید.",
+    "addDay": "افزودن روز",
+    "emptyTitle": "برنامه‌ای ثبت نشده",
+    "emptyDesc": "برای شروع، یک روز به برنامه سفر خود اضافه کنید.",
+    "addItem": "افزودن فعالیت",
+    "itemTitle": "عنوان فعالیت",
+    "itemTitlePlaceholder": "مثال: بازدید از موزه",
+    "startTime": "زمان شروع",
+    "endTime": "زمان پایان",
+    "notes": "یادداشت‌ها",
+    "notesPlaceholder": "جزئیات بیشتر (اختیاری)",
+    "save": "ذخیره",
+    "cancel": "انصراف",
+    "delete": "حذف",
+    "successDayAdded": "روز با موفقیت اضافه شد!",
+    "successItemAdded": "فعالیت با موفقیت اضافه شد!",
+    "successItemDeleted": "فعالیت حذف شد.",
+    "deleteDay": "حذف روز",
+    "deleteDayConfirm": "مطمئن هستید؟ تمام فعالیت‌های این روز حذف خواهند شد.",
+    "sortByTime": "مرتب‌سازی زمانی",
+    "timeWarning": "ترتیب زمانی به هم خورده است",
+    "selectDatePlaceholder": "انتخاب تاریخ",
+    "timePlaceholder": "--:--",
+    "errorDeleteDay": "حذف روز با خطا مواجه شد. دوباره تلاش کنید.",
+    "errorSortItems": "مرتب‌سازی با خطا مواجه شد. دوباره تلاش کنید.",
+    "errorReorder": "بروزرسانی ترتیب آیتم‌ها با خطا مواجه شد.",
+    "errorDeleteItem": "حذف فعالیت با خطا مواجه شد.",
+    "errorGeneric": "خطایی رخ داد. لطفاً دوباره تلاش کنید.",
+    "editItem": "ویرایش فعالیت",
+    "successItemUpdated": "فعالیت با موفقیت ویرایش شد!",
+    "deleteItem": "حذف فعالیت",
+    "deleteItemConfirm": "مطمئنید می‌خواهید این فعالیت را حذف کنید؟"
+  },
+  "ItineraryValidations": {
+    "titleRequired": "عنوان فعالیت الزامی است.",
+    "invalidTimeFormat": "زمان باید با فرمت HH:mm باشد.",
+    "endTimeBeforeStart": "زمان پایان باید بعد از زمان شروع باشد.",
+    "dateRequired": "انتخاب تاریخ الزامی است.",
+    "dateAlreadyExists": "این تاریخ قبلاً به برنامه اضافه شده است."
   }
 }

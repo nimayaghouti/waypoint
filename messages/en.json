@@ -13,7 +13,8 @@
     "VerifyEmail": "Verify Email",
     "Trips": "My Trips",
     "Calendar": "Calendar",
-    "Polls": "Polls"
+    "Polls": "Polls",
+    "Itinerary": "Itinerary"
   },
   "HomePage": {
     "metaTitle": "Home",
@@ -293,5 +294,47 @@
     "closesAtRequired": "Please select a closing date and time.",
     "closesAtInvalid": "The selected date and time is invalid.",
     "closesAtFuture": "The closing time must be in the future."
+  },
+  "Itinerary": {
+    "title": "Itinerary",
+    "description": "Plan your day-to-day activities and sort them effortlessly.",
+    "addDay": "Add Day",
+    "emptyTitle": "No itinerary yet",
+    "emptyDesc": "Start by adding a day to your trip.",
+    "addItem": "Add Activity",
+    "itemTitle": "Activity Title",
+    "itemTitlePlaceholder": "e.g., Visit the Eiffel Tower",
+    "startTime": "Start Time",
+    "endTime": "End Time",
+    "notes": "Notes",
+    "notesPlaceholder": "Any extra details? (optional)",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "successDayAdded": "Day added successfully!",
+    "successItemAdded": "Activity added successfully!",
+    "successItemDeleted": "Activity removed.",
+    "deleteDay": "Delete Day",
+    "deleteDayConfirm": "Are you sure? This will delete all activities in this day.",
+    "sortByTime": "Sort by Time",
+    "timeWarning": "Out of chronological order",
+    "selectDatePlaceholder": "Select a date",
+    "timePlaceholder": "--:--",
+    "errorDeleteDay": "Failed to delete day. Please try again.",
+    "errorSortItems": "Failed to sort items. Please try again.",
+    "errorReorder": "Failed to update item order.",
+    "errorDeleteItem": "Failed to delete item.",
+    "errorGeneric": "An error occurred. Please try again.",
+    "editItem": "Edit Activity",
+    "successItemUpdated": "Activity updated successfully!",
+    "deleteItem": "Delete Activity",
+    "deleteItemConfirm": "Are you sure you want to delete this activity?"
+  },
+  "ItineraryValidations": {
+    "titleRequired": "Title is required.",
+    "invalidTimeFormat": "Time must be in HH:mm format.",
+    "endTimeBeforeStart": "End time must be after start time.",
+    "dateRequired": "Date is required.",
+    "dateAlreadyExists": "This date is already added to the itinerary."
   }
 }
