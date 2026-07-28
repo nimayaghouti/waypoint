@@ -15,7 +15,9 @@ import {
   CalendarLabels,
   getDateFns,
   getDateFnsLocale,
+  getWeekdayLabels,
   getWeekStartsOn,
+  toDisplaySafeDate,
   toISODateKey,
   toLocaleDigits,
 } from '@/lib/calendar-lib';
@@ -68,10 +70,7 @@ export default function HeatmapCalendar({
     end: endDate,
   });
 
-  const weekDaysLabels =
-    locale === 'fa'
-      ? ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج']
-      : ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+  const weekDaysLabels = getWeekdayLabels(locale);
 
   const monthTitle = toLocaleDigits(
     dateFns.format(currentMonth, 'MMMM yyyy', { locale: dateLocale }),
@@ -158,7 +157,8 @@ export default function HeatmapCalendar({
             const dateKey = toISODateKey(day);
             const isPast = dateKey < todayDateString;
             const dayAvailabilities = availabilities.filter(
-              a => toISODateKey(new Date(a.date)) === dateKey,
+              a =>
+                toISODateKey(toDisplaySafeDate(new Date(a.date))) === dateKey,
             );
             const myStatus = dayAvailabilities.find(
               a => a.userId === currentUserId,
