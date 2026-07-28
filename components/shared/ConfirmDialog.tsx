@@ -10,11 +10,12 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 
-interface LogoutDialogProps {
+interface ConfirmDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
-  isLoggingOut: boolean;
+  isPending: boolean;
+  confirmVariant?: 'destructive' | 'default';
   labels: {
     title: string;
     description: string;
@@ -23,13 +24,14 @@ interface LogoutDialogProps {
   };
 }
 
-export function LogoutDialog({
+export default function ConfirmDialog({
   open,
   onOpenChange,
   onConfirm,
-  isLoggingOut,
+  isPending,
+  confirmVariant = 'destructive',
   labels,
-}: LogoutDialogProps) {
+}: ConfirmDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-106" showCloseButton={false}>
@@ -44,15 +46,15 @@ export function LogoutDialog({
             variant="outline"
             className="cursor-pointer px-6"
             onClick={() => onOpenChange(false)}
-            disabled={isLoggingOut}
+            disabled={isPending}
           >
             {labels.cancel}
           </Button>
           <Button
-            variant="destructive"
+            variant={confirmVariant}
             className="cursor-pointer px-6"
             onClick={onConfirm}
-            disabled={isLoggingOut}
+            disabled={isPending}
           >
             {labels.confirmButton}
           </Button>

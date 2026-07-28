@@ -14,7 +14,7 @@ import { useState } from 'react';
 
 import { Link } from '@/i18n/navigation';
 
-import { LogoutDialog } from '@/components/layout/LogoutDialog';
+import ConfirmDialog from '@/components/shared/ConfirmDialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -156,11 +156,11 @@ export function UserMenu({ user, labels, children }: UserMenuProps) {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <LogoutDialog
+      <ConfirmDialog
         open={showLogoutDialog}
         onOpenChange={setShowLogoutDialog}
         onConfirm={handleLogout}
-        isLoggingOut={isLoggingOut}
+        isPending={isLoggingOut}
         labels={{
           title: labels.logoutConfirmTitle,
           description: labels.logoutConfirmDesc,
