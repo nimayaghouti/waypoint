@@ -6,6 +6,7 @@ import { useFormatter } from 'next-intl';
 import { useEffect, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
+import ConfirmDialog from '@/components/shared/ConfirmDialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,7 +23,6 @@ import {
   submitVoteAction,
 } from '@/lib/actions/poll';
 
-import ClosePollDialog from './ClosePollDialog';
 import PollOptionRow from './PollOptionRow';
 
 interface PollData {
@@ -243,11 +243,11 @@ export default function PollCard({
         </div>
       </CardFooter>
 
-      <ClosePollDialog
+      <ConfirmDialog
         open={isCloseDialogOpen}
         onOpenChange={setIsCloseDialogOpen}
         onConfirm={handleConfirmClosePoll}
-        isClosing={isPending}
+        isPending={isPending}
         labels={{
           title: labels.closePollDialogTitle,
           description: labels.closePollConfirm,
