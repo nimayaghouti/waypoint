@@ -157,12 +157,33 @@ export default function ItineraryBoard({
 
     setDays(newDays);
 
-    startTransition(async () => {
-      const payload = reorderedItems.map(i => ({
+    const snapshotIndex = new Map(
+      snapshot.flatMap(d =>
+        d.items.map(i => [
+          i.id,
+          { itineraryDayId: i.itineraryDayId, order: i.order },
+        ]),
+      ),
+    );
+
+    const payload = reorderedItems
+      .map(i => ({
         id: i.id,
         itineraryDayId: i.itineraryDayId,
         order: i.order,
-      }));
+      }))
+      .filter(i => {
+        const prev = snapshotIndex.get(i.id);
+        return (
+          !prev ||
+          prev.itineraryDayId !== i.itineraryDayId ||
+          prev.order !== i.order
+        );
+      });
+
+    if (payload.length === 0) return;
+
+    startTransition(async () => {
       const result = await updateItineraryItemsAction(tripId, payload);
       if (result && 'error' in result) {
         toast.error(labels.errorReorder);

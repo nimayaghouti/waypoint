@@ -84,19 +84,22 @@ export default function ItineraryDayColumn({
 
   const handleSortByTime = () => {
     startTransition(async () => {
-      const sortedItems = [...day.items]
-        .sort((a, b) => {
-          if (!a.startTime) return 1;
-          if (!b.startTime) return -1;
-          return a.startTime.localeCompare(b.startTime);
-        })
-        .map((item, index) => ({ ...item, order: index }));
+      const sortedItems = [...day.items].sort((a, b) => {
+        if (!a.startTime) return 1;
+        if (!b.startTime) return -1;
+        return a.startTime.localeCompare(b.startTime);
+      });
 
-      const payload = sortedItems.map(i => ({
-        id: i.id,
-        itineraryDayId: day.id,
-        order: i.order,
-      }));
+      const payload = sortedItems
+        .map((item, index) => ({
+          id: item.id,
+          itineraryDayId: day.id,
+          order: index,
+        }))
+        .filter((item, index) => item.id !== day.items[index].id);
+
+      if (payload.length === 0) return;
+
       const result = await updateItineraryItemsAction(tripId, payload);
       if (result && 'error' in result) toast.error(labels.errorSortItems);
     });
