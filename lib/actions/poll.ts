@@ -9,7 +9,7 @@ import { auth } from '@/auth';
 import prisma from '@/lib/prisma';
 import { getPollSchemas } from '@/lib/validations/poll';
 
-const POLLS_PATH = '/(main)/(dashboard)/trips/[tripId]/polls';
+const POLLS_PATH = '/[locale]/(main)/(dashboard)/trips/[tripId]/polls';
 
 export async function createPollAction(
   tripId: string,

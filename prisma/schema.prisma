@@ -100,6 +100,7 @@ model Trip {
   members         TripMember[]
   availabilities  Availability[]
   polls           Poll[]
+  itineraryDays   ItineraryDay[]
   timezone String @default("UTC")
   
   createdAt     DateTime      @default(now())
@@ -172,4 +173,31 @@ model Vote {
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([pollOptionId, userId]) 
+}
+
+model ItineraryDay {
+  id        String          @id @default(cuid())
+  tripId    String
+  trip      Trip            @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  date      DateTime        @db.Date
+  notes     String?
+  
+  items     ItineraryItem[]
+
+  @@unique([tripId, date]) 
+}
+
+model ItineraryItem {
+  id             String       @id @default(cuid())
+  itineraryDayId String
+  itineraryDay   ItineraryDay @relation(fields: [itineraryDayId], references: [id], onDelete: Cascade)
+  
+  placeId        String?     
+  title          String
+  startTime      String?      
+  endTime        String?      
+  notes          String?
+  order          Int         
+
+  @@index([itineraryDayId])
 }

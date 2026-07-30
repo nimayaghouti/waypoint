@@ -10,11 +10,12 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 
-interface ClosePollDialogProps {
+interface ConfirmDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
-  isClosing: boolean;
+  isPending: boolean;
+  confirmVariant?: 'destructive' | 'default';
   labels: {
     title: string;
     description: string;
@@ -23,13 +24,14 @@ interface ClosePollDialogProps {
   };
 }
 
-export default function ClosePollDialog({
+export default function ConfirmDialog({
   open,
   onOpenChange,
   onConfirm,
-  isClosing,
+  isPending,
+  confirmVariant = 'destructive',
   labels,
-}: ClosePollDialogProps) {
+}: ConfirmDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-106" showCloseButton={false}>
@@ -44,15 +46,15 @@ export default function ClosePollDialog({
             variant="outline"
             className="cursor-pointer px-6"
             onClick={() => onOpenChange(false)}
-            disabled={isClosing}
+            disabled={isPending}
           >
             {labels.cancel}
           </Button>
           <Button
-            variant="destructive"
+            variant={confirmVariant}
             className="cursor-pointer px-6"
             onClick={onConfirm}
-            disabled={isClosing}
+            disabled={isPending}
           >
             {labels.confirmButton}
           </Button>

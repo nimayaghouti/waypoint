@@ -50,3 +50,11 @@ export function toLocaleDigits(value: string, locale: string): string {
 export function toISODateKey(date: Date): string {
   return gregorian.format(date, 'yyyy-MM-dd');
 }
+
+export function toDisplaySafeDate(utcDate: Date): Date {
+  return new Date(
+    utcDate.getUTCFullYear(),
+    utcDate.getUTCMonth(),
+    utcDate.getUTCDate(),
+  );
+}
