@@ -113,7 +113,7 @@ export default function ItineraryItemCard({
             </div>
 
             {canEdit && (
-              <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+              <div className="flex items-center gap-0.5 opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 transition-opacity shrink-0">
                 <ItemModal
                   tripId={tripId}
                   dayId={dayId}
