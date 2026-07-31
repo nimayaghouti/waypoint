@@ -31,6 +31,7 @@ model User {
   tripMemberships         TripMember[]
   availabilities          Availability[]
   votes                   Vote[]
+  createdPlaces           Place[]
   
   createdAt               DateTime                 @default(now())
   updatedAt               DateTime                 @updatedAt
@@ -101,6 +102,7 @@ model Trip {
   availabilities  Availability[]
   polls           Poll[]
   itineraryDays   ItineraryDay[]
+  places          Place[]
   timezone String @default("UTC")
   
   createdAt     DateTime      @default(now())
@@ -161,6 +163,7 @@ model PollOption {
   poll    Poll    @relation(fields: [pollId], references: [id], onDelete: Cascade)
   label   String
   placeId String? 
+  place   Place?  @relation(fields: [placeId], references: [id], onDelete: SetNull)
   
   votes   Vote[]
 }
@@ -192,7 +195,9 @@ model ItineraryItem {
   itineraryDayId String
   itineraryDay   ItineraryDay @relation(fields: [itineraryDayId], references: [id], onDelete: Cascade)
   
-  placeId        String?     
+  placeId        String?      
+  place          Place?       @relation(fields: [placeId], references: [id], onDelete: SetNull)
+  
   title          String
   startTime      String?      
   endTime        String?      
@@ -200,4 +205,26 @@ model ItineraryItem {
   order          Int         
 
   @@index([itineraryDayId])
+}
+
+model Place {
+  id          String   @id @default(cuid())
+  tripId      String
+  trip        Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  name        String
+  address     String?
+  lat         Float
+  lng         Float
+  description String?
+
+  createdById String?
+  createdBy   User?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  itineraryItems ItineraryItem[]
+  pollOptions    PollOption[]
+
+  createdAt   DateTime @default(now())
+
+  @@index([tripId])
 }
