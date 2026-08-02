@@ -83,6 +83,7 @@ export default function Map({
         maxBoundsViscosity={1.0}
         className={`
           w-full h-full z-0 rounded-xl
+          font-sans!
           ${isAddMode ? 'cursor-crosshair' : ''}
           dark:[&_.leaflet-tile-pane]:invert!
           dark:[&_.leaflet-tile-pane]:hue-rotate-180!
