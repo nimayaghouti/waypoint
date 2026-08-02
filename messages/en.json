@@ -14,7 +14,8 @@
     "Trips": "My Trips",
     "Calendar": "Calendar",
     "Polls": "Polls",
-    "Itinerary": "Itinerary"
+    "Itinerary": "Itinerary",
+    "Places": "Places"
   },
   "HomePage": {
     "metaTitle": "Home",
@@ -336,5 +337,28 @@
     "endTimeBeforeStart": "End time must be after start time.",
     "dateRequired": "Date is required.",
     "dateAlreadyExists": "This date is already added to the itinerary."
+  },
+  "Places": {
+    "title": "Places & Map",
+    "description": "Discover, search, and pin locations for your trip.",
+    "searchPlaceholder": "Search for a place (e.g. Eiffel Tower)...",
+    "addPlace": "Add to Trip",
+    "noPlaces": "No places added yet.",
+    "savedPlaces": "Saved Places",
+    "searchResults": "Search Results",
+    "saveError": "Failed to save place.",
+    "saveSuccess": "Place added successfully!",
+    "deleteError": "Failed to remove place.",
+    "deleteSuccess": "Place removed.",
+    "searching": "Searching...",
+    "addPin": "Add Pin",
+    "addPinModeActive": "Click on the map",
+    "namePlaceholder": "Place name",
+    "geocoding": "Finding address...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "updateError": "Failed to update place.",
+    "updateSuccess": "Place updated.",
+    "duplicateError": "This place is already on your list."
   }
 }

@@ -14,7 +14,8 @@
     "Trips": "سفرهای من",
     "Calendar": "تقویم",
     "Polls": "رأی‌گیری‌ها",
-    "Itinerary": "برنامه سفر"
+    "Itinerary": "برنامه سفر",
+    "Places": "مکان‌ها"
   },
   "HomePage": {
     "metaTitle": "خانه",
@@ -336,5 +337,28 @@
     "endTimeBeforeStart": "زمان پایان باید بعد از زمان شروع باشد.",
     "dateRequired": "انتخاب تاریخ الزامی است.",
     "dateAlreadyExists": "این تاریخ قبلاً به برنامه اضافه شده است."
+  },
+  "Places": {
+    "title": "مکان‌ها و نقشه",
+    "description": "مکان‌های جذاب سفر خود را جستجو و روی نقشه پین کنید.",
+    "searchPlaceholder": "جستجوی مکان (مثلاً برج میلاد)...",
+    "addPlace": "افزودن به سفر",
+    "noPlaces": "هنوز مکانی اضافه نشده است.",
+    "savedPlaces": "مکان‌های ذخیره‌شده",
+    "searchResults": "نتایج جستجو",
+    "saveError": "ذخیره مکان با خطا مواجه شد.",
+    "saveSuccess": "مکان با موفقیت اضافه شد!",
+    "deleteError": "حذف مکان با خطا مواجه شد.",
+    "deleteSuccess": "مکان حذف شد.",
+    "searching": "در حال جستجو...",
+    "addPin": "افزودن پین",
+    "addPinModeActive": "روی نقشه کلیک کنید",
+    "namePlaceholder": "نام مکان",
+    "geocoding": "در حال یافتن آدرس...",
+    "save": "ذخیره",
+    "cancel": "انصراف",
+    "updateError": "بروزرسانی مکان با خطا مواجه شد.",
+    "updateSuccess": "مکان بروزرسانی شد.",
+    "duplicateError": "این مکان قبلاً به لیست اضافه شده است."
   }
 }
