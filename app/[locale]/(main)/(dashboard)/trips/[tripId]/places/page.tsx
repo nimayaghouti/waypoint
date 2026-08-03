@@ -60,6 +60,15 @@ export default async function TripPlacesPage({
     updateError: t('updateError'),
     updateSuccess: t('updateSuccess'),
     duplicateError: t('duplicateError'),
+    tabSaved: t('tabSaved'),
+    tabExplore: t('tabExplore'),
+    explorePrompt: t('explorePrompt'),
+    exploreButton: t('exploreButton'),
+    exploring: t('exploring'),
+    categoryTourism: t('categoryTourism'),
+    categoryFood: t('categoryFood'),
+    noPoisFound: t('noPoisFound'),
+    exploreStalePrompt: t('exploreStalePrompt'),
   };
 
   const tripMember = await prisma.tripMember.findUnique({
