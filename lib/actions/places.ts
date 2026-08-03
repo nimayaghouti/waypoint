@@ -4,7 +4,9 @@ import { revalidatePath } from 'next/cache';
 
 import { auth } from '@/auth';
 
+import { fetchNearbyPOIs } from '@/lib/geo/overpass';
 import prisma from '@/lib/prisma';
+import { createRateLimiter } from '@/lib/ratelimit/external-api';
 import { addPlaceSchema } from '@/lib/validations/places';
 
 export interface PlaceSearchResult {
@@ -23,22 +25,9 @@ interface NominatimResponse {
   lon: string;
 }
 
-let lastNominatimRequestTime = 0;
-const NOMINATIM_DELAY_MS = 1000;
-
 const PLACES_PATH = '/[locale]/(main)/(dashboard)/trips/[tripId]/places';
 
-async function applyRateLimit() {
-  const now = Date.now();
-  const timeSinceLastRequest = now - lastNominatimRequestTime;
-
-  if (timeSinceLastRequest < NOMINATIM_DELAY_MS) {
-    const waitTime = NOMINATIM_DELAY_MS - timeSinceLastRequest;
-    await new Promise(resolve => setTimeout(resolve, waitTime));
-  }
-
-  lastNominatimRequestTime = Date.now();
-}
+const applyNominatimRateLimit = createRateLimiter(1000);
 
 export async function searchPlacesNominatimAction(
   query: string,
@@ -52,11 +41,11 @@ export async function searchPlacesNominatimAction(
   url.searchParams.set('q', normalizedQuery);
   url.searchParams.set('format', 'json');
   url.searchParams.set('addressdetails', '1');
-  url.searchParams.set('limit', '5');
+  url.searchParams.set('limit', '10');
   url.searchParams.set('accept-language', locale);
 
   try {
-    await applyRateLimit();
+    await applyNominatimRateLimit();
 
     const res = await fetch(url.toString(), {
       headers: {
@@ -163,7 +152,7 @@ export async function reverseGeocodeAction(
   error?: string;
 }> {
   try {
-    await applyRateLimit();
+    await applyNominatimRateLimit();
 
     const url = new URL('https://nominatim.openstreetmap.org/reverse');
     url.searchParams.set('lat', lat.toString());
@@ -228,3 +217,44 @@ export async function updatePlaceAction(
     return { error: 'Failed to update place' };
   }
 }
+
+export async function exploreNearbyAction(
+  lat: number,
+  lng: number,
+  locale: string,
+) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) return { error: 'Unauthorized' };
+
+    const pois = await fetchNearbyPOIs(lat, lng, 1500, locale);
+
+    const dataWithDistance = pois
+      .map(poi => {
+        const R = 6371e3;
+        const lat1 = (lat * Math.PI) / 180;
+        const lat2 = (poi.lat * Math.PI) / 180;
+        const deltaLat = ((poi.lat - lat) * Math.PI) / 180;
+        const deltaLng = ((poi.lng - lng) * Math.PI) / 180;
+
+        const a =
+          Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+          Math.cos(lat1) *
+            Math.cos(lat2) *
+            Math.sin(deltaLng / 2) *
+            Math.sin(deltaLng / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const distance = Math.round(R * c);
+
+        return { ...poi, distance };
+      })
+      .sort((a, b) => a.distance - b.distance);
+
+    return { success: true, data: dataWithDistance };
+  } catch (error) {
+    console.error(error);
+    return { error: 'Failed to explore area' };
+  }
+}
+
+export type { NearbyPOI } from '@/lib/geo/overpass';
