@@ -359,6 +359,15 @@
     "cancel": "Cancel",
     "updateError": "Failed to update place.",
     "updateSuccess": "Place updated.",
-    "duplicateError": "This place is already on your list."
+    "duplicateError": "This place is already on your list.",
+    "tabSaved": "Saved",
+    "tabExplore": "Explore",
+    "explorePrompt": "Select a place on the map or from your saved list to discover nearby attractions.",
+    "exploreButton": "Find Nearby POIs",
+    "exploring": "Scanning area...",
+    "categoryTourism": "Attractions",
+    "categoryFood": "Food & Drink",
+    "noPoisFound": "No interesting places found in this radius.",
+    "exploreStalePrompt": "Tap the button above to explore places near this spot."
   }
 }

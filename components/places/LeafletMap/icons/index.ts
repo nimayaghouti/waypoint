@@ -14,3 +14,13 @@ export const draftIcon = new L.Icon({
   ...customIcon.options,
   className: 'hue-rotate-90 saturate-150',
 });
+
+export const exploreIcon = new L.Icon({
+  ...customIcon.options,
+  className: 'hue-rotate-180 saturate-150',
+});
+
+export const activeIcon = new L.Icon({
+  ...customIcon.options,
+  className: 'hue-rotate-140 saturate-200 brightness-110',
+});

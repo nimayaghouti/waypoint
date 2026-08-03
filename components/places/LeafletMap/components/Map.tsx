@@ -20,7 +20,7 @@ import { usePlaceDraft } from '../hooks/use-place-draft';
 
 import type { PlaceItem } from '../types';
 
-import { customIcon, draftIcon } from '../icons';
+import { activeIcon, customIcon, draftIcon, exploreIcon } from '../icons';
 
 export default function Map({
   places,
@@ -40,6 +40,12 @@ export default function Map({
   const center =
     activeLocation ||
     (places.length > 0 ? [places[0].lat, places[0].lng] : [51.505, -0.09]);
+
+  const isActiveMatch = (p: PlaceItem) =>
+    !!activeLocation &&
+    p.lat === activeLocation[0] &&
+    p.lng === activeLocation[1];
+  const hasActiveMarkerInPlaces = places.some(isActiveMatch);
 
   const {
     isAddMode,
@@ -83,6 +89,7 @@ export default function Map({
         maxBoundsViscosity={1.0}
         className={`
           w-full h-full z-0 rounded-xl
+          font-sans!
           ${isAddMode ? 'cursor-crosshair' : ''}
           dark:[&_.leaflet-tile-pane]:invert!
           dark:[&_.leaflet-tile-pane]:hue-rotate-180!
@@ -106,26 +113,40 @@ export default function Map({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <MinZoomHandler />
-        {activeLocation && <MapController center={activeLocation} />}
+        {activeLocation && !isAddMode && !draftPin && (
+          <MapController center={activeLocation} />
+        )}
         <AddPinListener active={isAddMode} onPick={handlePickOnMap} />
 
         {places.map(place => {
           const isEditingThis = draftPin?.id === place.id;
+          const isActive = isActiveMatch(place);
           const position: [number, number] = isEditingThis
             ? [draftPin.lat, draftPin.lng]
             : [place.lat, place.lng];
+          const icon = isEditingThis
+            ? draftIcon
+            : isActive
+              ? activeIcon
+              : place.isPreview
+                ? exploreIcon
+                : customIcon;
 
           return (
             <Marker
               key={place.id}
               position={position}
-              icon={isEditingThis ? draftIcon : customIcon}
-              draggable={canEdit && (isEditingThis || !draftPin)}
+              icon={icon}
+              draggable={
+                canEdit && !place.isPreview && (isEditingThis || !draftPin)
+              }
               ref={el => {
                 markerRefs.current[place.id] = el;
               }}
               eventHandlers={
-                canEdit ? { dragend: handleMarkerDragEnd(place) } : undefined
+                canEdit && !place.isPreview
+                  ? { dragend: handleMarkerDragEnd(place) }
+                  : undefined
               }
             >
               <Popup
@@ -179,6 +200,10 @@ export default function Map({
               />
             </Popup>
           </Marker>
+        )}
+
+        {activeLocation && !hasActiveMarkerInPlaces && (
+          <Marker position={activeLocation} icon={activeIcon} />
         )}
       </MapContainer>
     </div>

@@ -1,6 +1,6 @@
 import type { PlaceSearchResult } from '@/lib/actions/places';
 
-export type PlaceItem = PlaceSearchResult;
+export type PlaceItem = PlaceSearchResult & { isPreview?: boolean };
 
 export interface DraftPin {
   id?: string;
