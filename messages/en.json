@@ -368,6 +368,10 @@
     "categoryTourism": "Attractions",
     "categoryFood": "Food & Drink",
     "noPoisFound": "No interesting places found in this radius.",
-    "exploreStalePrompt": "Tap the button above to explore places near this spot."
+    "exploreStalePrompt": "Tap the button above to explore places near this spot.",
+    "enrichPlace": "Generate AI Description",
+    "enriching": "Writing with AI...",
+    "enrichSuccess": "Description generated successfully!",
+    "enrichError": "Failed to generate description."
   }
 }
