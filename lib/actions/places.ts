@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 
 import { auth } from '@/auth';
 
+import { generatePlaceDescription } from '@/lib/ai/enrich-place';
 import { fetchNearbyPOIs } from '@/lib/geo/overpass';
 import prisma from '@/lib/prisma';
 import { createRateLimiter } from '@/lib/ratelimit/external-api';
@@ -15,6 +16,7 @@ export interface PlaceSearchResult {
   address: string | null;
   lat: number;
   lng: number;
+  description?: string | null;
 }
 
 interface NominatimResponse {
@@ -254,6 +256,46 @@ export async function exploreNearbyAction(
   } catch (error) {
     console.error(error);
     return { error: 'Failed to explore area' };
+  }
+}
+
+export async function enrichPlaceDescriptionAction(
+  tripId: string,
+  placeId: string,
+  locale: string,
+) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) return { error: 'Unauthorized' };
+
+    const member = await prisma.tripMember.findUnique({
+      where: { tripId_userId: { tripId, userId: session.user.id } },
+    });
+    if (!member || member.role === 'VIEWER') return { error: 'Forbidden' };
+
+    const place = await prisma.place.findUnique({
+      where: { id: placeId, tripId },
+    });
+
+    if (!place) return { error: 'Not found' };
+
+    const description = await generatePlaceDescription(
+      place.name,
+      place.address,
+      locale,
+    );
+    if (!description) return { error: 'Generation failed' };
+
+    await prisma.place.update({
+      where: { id: placeId },
+      data: { description },
+    });
+
+    revalidatePath(PLACES_PATH, 'page');
+    return { success: true, description };
+  } catch (error) {
+    console.error(error);
+    return { error: 'Failed to enrich place' };
   }
 }
 
