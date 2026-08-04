@@ -69,6 +69,10 @@ export default async function TripPlacesPage({
     categoryFood: t('categoryFood'),
     noPoisFound: t('noPoisFound'),
     exploreStalePrompt: t('exploreStalePrompt'),
+    enrichPlace: t('enrichPlace'),
+    enriching: t('enriching'),
+    enrichSuccess: t('enrichSuccess'),
+    enrichError: t('enrichError'),
   };
 
   const tripMember = await prisma.tripMember.findUnique({

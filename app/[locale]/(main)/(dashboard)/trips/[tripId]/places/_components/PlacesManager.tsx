@@ -1,6 +1,14 @@
 'use client';
 
-import { Compass, Loader2, MapPin, Plus, Search, Trash2 } from 'lucide-react';
+import {
+  Compass,
+  Loader2,
+  MapPin,
+  Plus,
+  Search,
+  Sparkles,
+  Trash2,
+} from 'lucide-react';
 
 import { useFormatter } from 'next-intl';
 import { useEffect, useMemo, useState, useTransition } from 'react';
@@ -20,6 +28,7 @@ import type { NearbyPOI } from '@/lib/actions/places';
 import {
   addPlaceAction,
   deletePlaceAction,
+  enrichPlaceDescriptionAction,
   exploreNearbyAction,
   PlaceSearchResult,
   searchPlacesNominatimAction,
@@ -76,6 +85,8 @@ export default function PlacesManager({
   const [isSearching, setIsSearching] = useState(false);
   const [pendingAddId, setPendingAddId] = useState<string | null>(null);
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+
+  const [pendingEnrichId, setPendingEnrichId] = useState<string | null>(null);
 
   const [, startTransition] = useTransition();
   const debouncedQuery = useDebounce(searchQuery, 800);
@@ -168,6 +179,24 @@ export default function PlacesManager({
   const handleTabChange = (value: string) => {
     setActiveTab(value as 'saved' | 'explore');
     setHoveredLocation(null);
+  };
+
+  const handleEnrichPlace = (placeId: string) => {
+    if (!canEdit || pendingEnrichId === placeId) return;
+    setPendingEnrichId(placeId);
+    startTransition(async () => {
+      try {
+        const result = await enrichPlaceDescriptionAction(
+          tripId,
+          placeId,
+          locale,
+        );
+        if (result.error) toast.error(labels.enrichError);
+        else toast.success(labels.enrichSuccess);
+      } finally {
+        setPendingEnrichId(null);
+      }
+    });
   };
 
   const isSearchMode = searchQuery.length >= 3;
@@ -279,35 +308,72 @@ export default function PlacesManager({
                         className="p-3 group cursor-pointer hover:border-primary/50 transition-colors"
                         onClick={() => setExploreCenter([place.lat, place.lng])}
                       >
-                        <div className="flex justify-between items-center gap-2">
-                          <div className="flex-1 min-w-0">
-                            <h4 className="font-semibold text-sm truncate">
-                              {place.name}
-                            </h4>
-                            <p
-                              className="text-xs text-muted-foreground line-clamp-2 mt-1"
-                              dir="auto"
-                            >
-                              {place.address}
-                            </p>
+                        <div className="flex flex-col gap-2">
+                          <div className="flex justify-between items-start gap-2">
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-semibold text-sm truncate">
+                                {place.name}
+                              </h4>
+                              <p
+                                className="text-xs text-muted-foreground line-clamp-2 mt-1"
+                                dir="auto"
+                              >
+                                {place.address}
+                              </p>
+                            </div>
+                            {canEdit && (
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="size-7 shrink-0 cursor-pointer text-muted-foreground hover:text-destructive opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:disabled:opacity-0 [@media(hover:hover)]:group-hover:opacity-100"
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  handleDeletePlace(place.id);
+                                }}
+                                disabled={pendingDeleteId !== null}
+                              >
+                                {pendingDeleteId === place.id ? (
+                                  <Loader2 className="size-4 animate-spin" />
+                                ) : (
+                                  <Trash2 className="size-4" />
+                                )}
+                              </Button>
+                            )}
                           </div>
-                          {canEdit && (
-                            <Button
-                              size="icon"
-                              variant="ghost"
-                              className="size-7 shrink-0 cursor-pointer text-muted-foreground hover:text-destructive opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:disabled:opacity-0 [@media(hover:hover)]:group-hover:opacity-100"
-                              onClick={e => {
-                                e.stopPropagation();
-                                handleDeletePlace(place.id);
-                              }}
-                              disabled={pendingDeleteId !== null}
-                            >
-                              {pendingDeleteId === place.id ? (
-                                <Loader2 className="size-4 animate-spin" />
-                              ) : (
-                                <Trash2 className="size-4" />
-                              )}
-                            </Button>
+
+                          {!place.description ? (
+                            canEdit && (
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="size-7 shrink-0 ms-auto cursor-pointer text-amber-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-500/10"
+                                title={
+                                  pendingEnrichId === place.id
+                                    ? labels.enriching
+                                    : labels.enrichPlace
+                                }
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  handleEnrichPlace(place.id);
+                                }}
+                                disabled={pendingEnrichId !== null}
+                              >
+                                {pendingEnrichId === place.id ? (
+                                  <Loader2 className="size-4 animate-spin" />
+                                ) : (
+                                  <Sparkles className="size-4" />
+                                )}
+                              </Button>
+                            )
+                          ) : (
+                            <div className="bg-muted/30 p-2 rounded-md border border-border/50">
+                              <p
+                                className="text-xs leading-relaxed text-muted-foreground"
+                                dir="auto"
+                              >
+                                {place.description}
+                              </p>
+                            </div>
                           )}
                         </div>
                       </Card>
