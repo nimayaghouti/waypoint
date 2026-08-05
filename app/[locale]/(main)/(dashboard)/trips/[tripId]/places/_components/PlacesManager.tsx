@@ -32,6 +32,8 @@ import {
   exploreNearbyAction,
   PlaceSearchResult,
   searchPlacesNominatimAction,
+  semanticSearchPlacesAction,
+  SemanticSearchResult,
 } from '@/lib/actions/places';
 interface ExploredPOI extends NearbyPOI {
   distance: number;
@@ -87,8 +89,14 @@ export default function PlacesManager({
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
   const [pendingEnrichId, setPendingEnrichId] = useState<string | null>(null);
+  const [semanticQuery, setSemanticQuery] = useState('');
+  const [semanticResults, setSemanticResults] = useState<
+    SemanticSearchResult[] | null
+  >(null);
+  const [isSemanticSearching, setIsSemanticSearching] = useState(false);
 
   const [, startTransition] = useTransition();
+  const debouncedSemanticQuery = useDebounce(semanticQuery, 1000);
   const debouncedQuery = useDebounce(searchQuery, 800);
   const format = useFormatter();
 
@@ -122,6 +130,29 @@ export default function PlacesManager({
       isMounted = false;
     };
   }, [debouncedQuery, locale]);
+
+  useEffect(() => {
+    if (debouncedSemanticQuery.trim().length < 3) return;
+
+    let isMounted = true;
+    const performSemanticSearch = async () => {
+      setIsSemanticSearching(true);
+      const result = await semanticSearchPlacesAction(
+        tripId,
+        debouncedSemanticQuery,
+      );
+
+      if (isMounted && result.success) {
+        setSemanticResults(result.data || []);
+        setIsSemanticSearching(false);
+      }
+    };
+
+    performSemanticSearch();
+    return () => {
+      isMounted = false;
+    };
+  }, [debouncedSemanticQuery, tripId]);
 
   const handleAddPlace = (place: PlaceSearchResult) => {
     if (!canEdit || pendingAddId === place.id) return;
@@ -199,6 +230,17 @@ export default function PlacesManager({
     });
   };
 
+  const handleSemanticSearchChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const val = e.target.value;
+    setSemanticQuery(val);
+    if (val.trim().length < 3) {
+      setSemanticResults(null);
+      setIsSemanticSearching(false);
+    }
+  };
+
   const isSearchMode = searchQuery.length >= 3;
   const exploreResultsAreCurrent =
     !!exploreCenter &&
@@ -214,8 +256,8 @@ export default function PlacesManager({
   ];
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 w-full lg:h-[75vh] lg:min-h-150">
-      <div className="w-full lg:w-1/3 flex flex-col gap-4 h-150 lg:h-full">
+    <div className="flex flex-col lg:flex-row lg:flex-wrap gap-6 w-full lg:h-auto lg:min-h-150">
+      <div className="w-full lg:flex-1 min-w-0 flex flex-col gap-4 h-150 lg:h-[75vh]">
         <div className="relative">
           <Search className="absolute inset-s-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
           <Input
@@ -485,7 +527,7 @@ export default function PlacesManager({
         )}
       </div>
 
-      <div className="w-full lg:w-2/3 aspect-square sm:aspect-4/2 lg:aspect-auto lg:h-full border border-border/50 rounded-xl overflow-hidden shadow-sm relative">
+      <div className="w-full lg:flex-2 min-w-0 aspect-square sm:aspect-4/2 lg:aspect-auto lg:h-[75vh] border border-border/50 rounded-xl overflow-hidden shadow-sm relative">
         <LeafletMap
           places={mapDisplayPlaces}
           activeLocation={activeLocation}
@@ -494,6 +536,74 @@ export default function PlacesManager({
           canEdit={canEdit}
           labels={labels}
         />
+      </div>
+
+      <div className="w-full bg-amber-500/5 border border-amber-500/20 rounded-xl p-4 mt-2">
+        <div className="flex flex-col gap-1 mb-4">
+          <h3 className="text-sm font-semibold text-amber-700 dark:text-amber-500 flex items-center gap-2">
+            <Sparkles className="size-4" />
+            {labels.aiSearchTitle}
+          </h3>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            {savedPlaces.length === 0
+              ? labels.aiSearchNoSavedPlaces
+              : labels.aiSearchDescription}
+          </p>
+        </div>
+
+        <div className="relative">
+          <Search className="absolute inset-s-3 top-1/2 -translate-y-1/2 size-4 text-amber-500/70" />
+          <Input
+            value={semanticQuery}
+            onChange={handleSemanticSearchChange}
+            placeholder={labels.semanticSearchPlaceholder}
+            disabled={savedPlaces.length === 0}
+            className="ps-9 border-amber-500/30 focus-visible:ring-amber-500/50 focus-visible:border-transparent bg-background shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          />
+        </div>
+
+        {savedPlaces.length > 0 && (
+          <div className="flex flex-col gap-3 mt-4">
+            {isSemanticSearching ? (
+              <p className="text-sm text-center text-amber-600/70 py-2 animate-pulse">
+                {labels.searching}
+              </p>
+            ) : semanticResults === null ? null : semanticResults.length ===
+              0 ? (
+              <p className="text-sm text-center text-muted-foreground py-2">
+                {labels.aiSearchEmpty}
+              </p>
+            ) : (
+              semanticResults.map(place => (
+                <Card
+                  key={place.id}
+                  className="p-3 cursor-pointer hover:border-amber-500/50 transition-colors border-amber-500/20 bg-background/50"
+                  onClick={() => setExploreCenter([place.lat, place.lng])}
+                >
+                  <div className="flex justify-between items-center gap-2">
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-sm truncate">
+                        {place.name}
+                      </h4>
+                      <p
+                        className="text-xs text-muted-foreground line-clamp-1 mt-1"
+                        dir="auto"
+                      >
+                        {place.description || place.address}
+                      </p>
+                    </div>
+                    <div className="shrink-0 flex items-center justify-center text-xs font-bold text-amber-600 bg-amber-500/10 px-2 py-1 rounded-md">
+                      {labels.similarityScore.replace(
+                        '{score}',
+                        format.number(Math.round(place.similarity * 100)),
+                      )}
+                    </div>
+                  </div>
+                </Card>
+              ))
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

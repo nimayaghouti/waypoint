@@ -372,6 +372,12 @@
     "enrichPlace": "Generate AI Description",
     "enriching": "Writing with AI...",
     "enrichSuccess": "Description generated successfully!",
-    "enrichError": "Failed to generate description."
+    "enrichError": "Failed to generate description.",
+    "semanticSearchPlaceholder": "Search saved places with AI (e.g., 'quiet coffee shop')...",
+    "aiSearchTitle": "AI Magic Search",
+    "aiSearchDescription": "Ask AI to find the best match among your saved places for this trip.",
+    "aiSearchNoSavedPlaces": "To use AI search, please save at least one place in this trip first.",
+    "aiSearchEmpty": "No matching places found in your saved list.",
+    "similarityScore": "{score}% Match"
   }
 }

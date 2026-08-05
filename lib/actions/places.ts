@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 
 import { auth } from '@/auth';
 
+import { generateEmbedding } from '@/lib/ai/embed';
 import { generatePlaceDescription } from '@/lib/ai/enrich-place';
 import { fetchNearbyPOIs } from '@/lib/geo/overpass';
 import prisma from '@/lib/prisma';
@@ -25,6 +26,16 @@ interface NominatimResponse {
   display_name: string;
   lat: string;
   lon: string;
+}
+
+export interface SemanticSearchResult {
+  id: string;
+  name: string;
+  address: string | null;
+  lat: number;
+  lng: number;
+  description: string | null;
+  similarity: number;
 }
 
 const PLACES_PATH = '/[locale]/(main)/(dashboard)/trips/[tripId]/places';
@@ -109,9 +120,23 @@ export async function addPlaceAction(
     });
     if (duplicate) return { error: 'DUPLICATE' };
 
-    await prisma.place.create({
+    const newPlace = await prisma.place.create({
       data: { tripId, ...parsed.data, createdById: session.user.id },
     });
+
+    const textToEmbed = `${parsed.data.name}. ${parsed.data.address || ''}`;
+    generateEmbedding(textToEmbed)
+      .then(async embedding => {
+        if (embedding) {
+          const vectorStr = `[${embedding.join(',')}]`;
+          await prisma.$executeRawUnsafe(
+            `UPDATE "Place" SET embedding = $1::vector WHERE id = $2`,
+            vectorStr,
+            newPlace.id,
+          );
+        }
+      })
+      .catch(console.error);
 
     revalidatePath(PLACES_PATH, 'page');
     return { success: true };
@@ -212,6 +237,20 @@ export async function updatePlaceAction(
     });
     if (count === 0) return { error: 'Not found' };
 
+    const textToEmbed = `${parsed.data.name}. ${parsed.data.address || ''}`;
+    generateEmbedding(textToEmbed)
+      .then(async embedding => {
+        if (embedding) {
+          const vectorStr = `[${embedding.join(',')}]`;
+          await prisma.$executeRawUnsafe(
+            `UPDATE "Place" SET embedding = $1::vector WHERE id = $2`,
+            vectorStr,
+            placeId,
+          );
+        }
+      })
+      .catch(console.error);
+
     revalidatePath(PLACES_PATH, 'page');
     return { success: true };
   } catch (error) {
@@ -291,11 +330,66 @@ export async function enrichPlaceDescriptionAction(
       data: { description },
     });
 
+    const textToEmbed = `${place.name}. ${place.address || ''}. ${description}`;
+    generateEmbedding(textToEmbed)
+      .then(async embedding => {
+        if (embedding) {
+          const vectorStr = `[${embedding.join(',')}]`;
+          await prisma.$executeRawUnsafe(
+            `UPDATE "Place" SET embedding = $1::vector WHERE id = $2`,
+            vectorStr,
+            placeId,
+          );
+        }
+      })
+      .catch(console.error);
+
     revalidatePath(PLACES_PATH, 'page');
     return { success: true, description };
   } catch (error) {
     console.error(error);
     return { error: 'Failed to enrich place' };
+  }
+}
+
+export async function semanticSearchPlacesAction(
+  tripId: string,
+  query: string,
+) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) return { error: 'Unauthorized' };
+
+    const member = await prisma.tripMember.findUnique({
+      where: { tripId_userId: { tripId, userId: session.user.id } },
+    });
+    if (!member || member.role === 'VIEWER') return { error: 'Forbidden' };
+
+    const embedding = await generateEmbedding(query, 'RETRIEVAL_QUERY');
+    if (!embedding) return { error: 'Failed to generate embedding' };
+
+    const vectorStr = `[${embedding.join(',')}]`;
+
+    const results = await prisma.$queryRawUnsafe<SemanticSearchResult[]>(
+      `
+      SELECT id, name, address, lat, lng, description,
+             1 - (embedding <=> $1::vector) as similarity
+      FROM "Place"
+      WHERE "tripId" = $2
+        AND embedding IS NOT NULL
+      ORDER BY embedding <=> $1::vector
+      LIMIT 5;
+    `,
+      vectorStr,
+      tripId,
+    );
+
+    const filteredResults = results.filter(r => r.similarity > 0.4);
+
+    return { success: true, data: filteredResults };
+  } catch (error) {
+    console.error('Semantic Search Error:', error);
+    return { error: 'Search failed' };
   }
 }
 

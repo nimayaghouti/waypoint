@@ -73,6 +73,12 @@ export default async function TripPlacesPage({
     enriching: t('enriching'),
     enrichSuccess: t('enrichSuccess'),
     enrichError: t('enrichError'),
+    semanticSearchPlaceholder: t('semanticSearchPlaceholder'),
+    aiSearchTitle: t('aiSearchTitle'),
+    aiSearchDescription: t('aiSearchDescription'),
+    aiSearchNoSavedPlaces: t('aiSearchNoSavedPlaces'),
+    aiSearchEmpty: t('aiSearchEmpty'),
+    similarityScore: t('similarityScore', { score: '{score}' }),
   };
 
   const tripMember = await prisma.tripMember.findUnique({
