@@ -217,6 +217,8 @@ model Place {
   lat         Float
   lng         Float
   description String?
+  
+  embedding   Unsupported("vector(768)")? 
 
   createdById String?
   createdBy   User?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
