@@ -15,7 +15,8 @@
     "Calendar": "Calendar",
     "Polls": "Polls",
     "Itinerary": "Itinerary",
-    "Places": "Places"
+    "Places": "Places",
+    "Expenses": "Expenses"
   },
   "HomePage": {
     "metaTitle": "Home",
@@ -379,5 +380,41 @@
     "aiSearchNoSavedPlaces": "To use AI search, please save at least one place in this trip first.",
     "aiSearchEmpty": "No matching places found in your saved list.",
     "similarityScore": "{score}% Match"
+  },
+  "Expenses": {
+    "title": "Expenses",
+    "description": "Track who paid what and calculate everyone's balance.",
+    "addExpense": "Add Expense",
+    "emptyTitle": "No expenses yet",
+    "emptyDesc": "Start by adding the first group expense.",
+    "descLabel": "Description",
+    "descPlaceholder": "e.g., Dinner at the beach",
+    "amountLabel": "Amount",
+    "currency": "currency",
+    "amountPlaceholder": "0.00",
+    "paidByLabel": "Paid By",
+    "splitHow": "Split Mode",
+    "splitEqual": "Equally",
+    "splitCustom": "Custom Amounts",
+    "splitWithLabel": "Split With",
+    "splitCount": "Split among {count} people",
+    "save": "Save Expense",
+    "cancel": "Cancel",
+    "successAdded": "Expense added successfully!",
+    "deleteConfirm": "Are you sure you want to delete this expense?",
+    "deleteConfirmButton": "Delete",
+    "successDeleted": "Expense deleted.",
+    "balancesTitle": "Balances",
+    "owes": "owes",
+    "getsBack": "gets back",
+    "settledUp": "All settled up!",
+    "unknownUser": "Unknown"
+  },
+  "ExpenseValidations": {
+    "descRequired": "Description is required.",
+    "amountRequired": "Amount must be greater than 0.",
+    "paidByRequired": "Please select who paid.",
+    "sharesMismatch": "The total of shares must equal the total amount.",
+    "sharesRequired": "At least one person must be selected to split the cost."
   }
 }

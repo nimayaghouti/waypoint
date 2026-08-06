@@ -32,6 +32,8 @@ model User {
   availabilities          Availability[]
   votes                   Vote[]
   createdPlaces           Place[]
+  expensesPaid            Expense[]      @relation("ExpensePayer")
+  expenseShares           ExpenseShare[] @relation("ExpenseShareUser")
   
   createdAt               DateTime                 @default(now())
   updatedAt               DateTime                 @updatedAt
@@ -103,7 +105,9 @@ model Trip {
   polls           Poll[]
   itineraryDays   ItineraryDay[]
   places          Place[]
+  expenses        Expense[]
   timezone String @default("UTC")
+  defaultCurrency String @default("USD")
   
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
@@ -229,4 +233,37 @@ model Place {
   createdAt   DateTime @default(now())
 
   @@index([tripId])
+}
+
+model Expense {
+  id          String   @id @default(cuid())
+  tripId      String
+  trip        Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  paidById    String?
+  paidBy      User?    @relation("ExpensePayer", fields: [paidById], references: [id], onDelete: SetNull)
+
+  amount      Decimal  @db.Decimal(12, 2)
+  currency    String   @default("USD")
+  description String
+
+  shares      ExpenseShare[]
+
+  createdAt   DateTime @default(now())
+
+  @@index([tripId])
+}
+
+model ExpenseShare {
+  id          String   @id @default(cuid())
+  expenseId   String
+  expense     Expense  @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+
+  userId      String
+  user        User     @relation("ExpenseShareUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  amount      Decimal  @db.Decimal(12, 2)
+
+  @@unique([expenseId, userId])
+  @@index([userId])
 }

@@ -15,7 +15,8 @@
     "Calendar": "تقویم",
     "Polls": "رأی‌گیری‌ها",
     "Itinerary": "برنامه سفر",
-    "Places": "مکان‌ها"
+    "Places": "مکان‌ها",
+    "Expenses": "هزینه‌ها"
   },
   "HomePage": {
     "metaTitle": "خانه",
@@ -379,5 +380,41 @@
     "aiSearchNoSavedPlaces": "برای استفاده از سرچ هوشمند، ابتدا باید حداقل یک مکان را در این سفر ذخیره کنید.",
     "aiSearchEmpty": "مکان مرتبطی در لیست شما یافت نشد.",
     "similarityScore": "{score}٪ تطابق"
+  },
+  "Expenses": {
+    "title": "هزینه‌ها",
+    "description": "ثبت کنید چه کسی چقدر پرداخته و مانده‌حساب هر فرد را ببینید.",
+    "addExpense": "ثبت هزینه",
+    "emptyTitle": "هزینه‌ای ثبت نشده",
+    "emptyDesc": "برای شروع، اولین هزینه گروهی را ثبت کنید.",
+    "descLabel": "توضیحات",
+    "descPlaceholder": "مثال: شام در رستوران ساحلی",
+    "amountLabel": "مبلغ",
+    "currency": "ارز",
+    "amountPlaceholder": "0",
+    "paidByLabel": "پرداخت‌کننده",
+    "splitHow": "نحوه تقسیم",
+    "splitEqual": "به طور مساوی",
+    "splitCustom": "مبالغ دلخواه",
+    "splitWithLabel": "تقسیم بین",
+    "splitCount": "تقسیم بین {count} نفر",
+    "save": "ثبت هزینه",
+    "cancel": "انصراف",
+    "successAdded": "هزینه با موفقیت ثبت شد!",
+    "deleteConfirm": "آیا از حذف این هزینه اطمینان دارید؟",
+    "deleteConfirmButton": "حذف",
+    "successDeleted": "هزینه حذف شد.",
+    "balancesTitle": "مانده‌حساب‌ها",
+    "owes": "بدهکار است",
+    "getsBack": "طلبکار است",
+    "settledUp": "حساب‌ها کاملاً تسویه است!",
+    "unknownUser": "ناشناس"
+  },
+  "ExpenseValidations": {
+    "descRequired": "توضیحات هزینه الزامی است.",
+    "amountRequired": "مبلغ باید بیشتر از صفر باشد.",
+    "paidByRequired": "لطفاً پرداخت‌کننده را مشخص کنید.",
+    "sharesMismatch": "مجموع سهم‌ها باید برابر با کل مبلغ باشد.",
+    "sharesRequired": "حداقل یک نفر باید در پرداخت شریک باشد."
   }
 }
