@@ -14,6 +14,7 @@ import prisma from '@/lib/prisma';
 import AddExpenseModal from './_components/AddExpenseModal';
 import BalancesSummary from './_components/BalancesSummary';
 import ExpenseCard from './_components/ExpenseCard';
+import SettlementCard from './_components/SettlementCard';
 
 export async function generateMetadata({
   params,
@@ -76,6 +77,18 @@ export default async function TripExpensesPage({
     getsBack: t('getsBack'),
     settledUp: t('settledUp'),
     unknownUser: t('unknownUser'),
+    settleUp: t('settleUp'),
+    settleUpDesc: t('settleUpDesc'),
+    markAsSettled: t('markAsSettled'),
+    settling: t('settling'),
+    noDebts: t('noDebts'),
+    owesTo: t('owesTo'),
+    successSettled: t('successSettled'),
+    paymentsTitle: t('paymentsTitle'),
+    expensesListTitle: t('expensesListTitle'),
+    deletePaymentConfirm: t('deletePaymentConfirm'),
+    successPaymentDeleted: t('successPaymentDeleted'),
+    paidTo: t('paidTo'),
   };
 
   const valLabels = {
@@ -86,7 +99,7 @@ export default async function TripExpensesPage({
     sharesRequired: tVal('sharesRequired'),
   };
 
-  const [trip, expenses] = await Promise.all([
+  const [trip, expenses, settlements] = await Promise.all([
     prisma.trip.findUnique({
       where: { id: tripId },
       include: {
@@ -109,6 +122,16 @@ export default async function TripExpensesPage({
       },
       orderBy: { createdAt: 'desc' },
     }),
+    prisma.settlement.findMany({
+      where: { tripId },
+      include: {
+        fromUser: {
+          select: { id: true, name: true, email: true, image: true },
+        },
+        toUser: { select: { id: true, name: true, email: true, image: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+    }),
   ]);
 
   if (!trip) return null;
@@ -120,14 +143,25 @@ export default async function TripExpensesPage({
     currentMember.role === 'OWNER' || currentMember.role === 'EDITOR';
 
   const balances = trip.members.map(member => {
-    const totalPaid = expenses
+    const totalPaidExp = expenses
       .filter(e => e.paidById === member.userId)
       .reduce((sum, e) => sum + Number(e.amount), 0);
 
-    const totalConsumed = expenses.reduce((sum, e) => {
+    const totalConsumedExp = expenses.reduce((sum, e) => {
       const myShare = e.shares.find(s => s.userId === member.userId);
       return sum + (myShare ? Number(myShare.amount) : 0);
     }, 0);
+
+    const totalSettlementsSent = settlements
+      .filter(s => s.fromUserId === member.userId)
+      .reduce((sum, s) => sum + Number(s.amount), 0);
+
+    const totalSettlementsReceived = settlements
+      .filter(s => s.toUserId === member.userId)
+      .reduce((sum, s) => sum + Number(s.amount), 0);
+
+    const totalPaid = totalPaidExp + totalSettlementsSent;
+    const totalConsumed = totalConsumedExp + totalSettlementsReceived;
 
     return {
       userId: member.userId,
@@ -149,7 +183,7 @@ export default async function TripExpensesPage({
   }));
 
   return (
-    <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full">
+    <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full pb-12 md:pb-0">
       <div className="flex flex-wrap justify-between items-end gap-4">
         <div className="space-y-2">
           <h2 className="text-2xl font-bold">{labels.title}</h2>
@@ -168,7 +202,7 @@ export default async function TripExpensesPage({
         )}
       </div>
 
-      {formattedExpenses.length === 0 ? (
+      {formattedExpenses.length === 0 && settlements.length === 0 ? (
         <Card className="border-dashed bg-muted/30">
           <CardContent className="flex flex-col items-center justify-center py-16 text-center">
             <div className="p-4 bg-primary/10 rounded-full text-primary mb-4">
@@ -179,23 +213,77 @@ export default async function TripExpensesPage({
           </CardContent>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="md:col-span-2 flex flex-col gap-3">
-            {formattedExpenses.map(expense => (
-              <ExpenseCard
-                key={expense.id}
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-2 flex flex-col gap-8">
+              {formattedExpenses.length > 0 && (
+                <div className="flex flex-col gap-3">
+                  <h3 className="text-lg font-bold text-foreground/70 dark:text-foreground/80 mb-1">
+                    {labels.expensesListTitle}
+                  </h3>
+                  {formattedExpenses.map(expense => (
+                    <ExpenseCard
+                      key={expense.id}
+                      tripId={tripId}
+                      expense={expense}
+                      canEdit={canEdit}
+                      labels={labels}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {settlements.length > 0 && (
+                <div className="flex flex-col gap-3">
+                  <h3 className="text-lg font-bold text-foreground/70 dark:text-foreground/80 mb-1">
+                    {labels.paymentsTitle}
+                  </h3>
+                  {settlements.map(settlement => {
+                    const canDeleteSettlement =
+                      canEdit ||
+                      settlement.fromUserId === session.user?.id ||
+                      settlement.toUserId === session.user?.id;
+
+                    return (
+                      <SettlementCard
+                        key={settlement.id}
+                        tripId={tripId}
+                        settlement={{
+                          ...settlement,
+                          amount: Number(settlement.amount),
+                        }}
+                        canDelete={canDeleteSettlement}
+                        labels={labels}
+                      />
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            <div className="hidden md:block w-full">
+              <BalancesSummary
+                variant="desktop"
                 tripId={tripId}
-                expense={expense}
-                canEdit={canEdit}
+                balances={balances}
+                currency={trip.defaultCurrency}
                 labels={labels}
+                canEdit={canEdit}
+                currentUserId={session.user.id!}
               />
-            ))}
+            </div>
           </div>
 
-          <div className="w-full">
-            <BalancesSummary balances={balances} labels={labels} />
-          </div>
-        </div>
+          <BalancesSummary
+            variant="mobile"
+            tripId={tripId}
+            balances={balances}
+            currency={trip.defaultCurrency}
+            labels={labels}
+            canEdit={canEdit}
+            currentUserId={session.user.id!}
+          />
+        </>
       )}
     </div>
   );

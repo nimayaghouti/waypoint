@@ -1,6 +1,6 @@
 'use client';
 
-import { Plus, Receipt } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 import { useMemo, useState, useTransition } from 'react';
 import { toast } from 'sonner';
@@ -168,7 +168,6 @@ export default function AddExpenseModal({
       <DialogContent className="sm:max-w-112.5">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Receipt className="size-5" />
             {labels.addExpense}
           </DialogTitle>
         </DialogHeader>

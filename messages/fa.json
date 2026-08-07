@@ -407,8 +407,20 @@
     "balancesTitle": "مانده‌حساب‌ها",
     "owes": "بدهکار است",
     "getsBack": "طلبکار است",
-    "settledUp": "حساب‌ها کاملاً تسویه است!",
-    "unknownUser": "ناشناس"
+    "settledUp": "تسویه شد!",
+    "unknownUser": "ناشناس",
+    "settleUp": "تسویه‌حساب",
+    "settleUpDesc": "با کمترین تعداد تراکنش حساب‌ها را تسویه کنید. پرداخت‌ها را اینجا ثبت کنید.",
+    "markAsSettled": "ثبت پرداخت",
+    "settling": "در حال ثبت...",
+    "noDebts": "حساب همه در این سفر کاملاً تسویه است!",
+    "owesTo": "بدهکار است به",
+    "successSettled": "پرداخت با موفقیت ثبت شد.",
+    "paymentsTitle": "تاریخچه پرداخت‌ها",
+    "expensesListTitle": "هزینه‌های گروهی",
+    "deletePaymentConfirm": "آیا از حذف این رکورد پرداخت اطمینان دارید؟",
+    "successPaymentDeleted": "رکورد پرداخت حذف شد.",
+    "paidTo": "پرداخت کرد به"
   },
   "ExpenseValidations": {
     "descRequired": "توضیحات هزینه الزامی است.",
