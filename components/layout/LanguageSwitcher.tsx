@@ -15,6 +15,7 @@ import {
   DropdownMenuSubTrigger,
 } from '@/components/ui/dropdown-menu';
 
+import { updateUserLocaleAction } from '@/lib/actions/auth';
 import { cn } from '@/lib/utils';
 
 interface LanguageSwitcherProps {
@@ -42,7 +43,8 @@ export default function LanguageSwitcher({
     const currentQuery = searchParams.toString();
     const querySuffix = currentQuery ? `?${currentQuery}` : '';
 
-    startTransition(() => {
+    startTransition(async () => {
+      await updateUserLocaleAction(nextLocale);
       router.replace(`${pathname}${querySuffix}`, { locale: nextLocale });
     });
   }

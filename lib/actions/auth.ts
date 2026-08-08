@@ -6,7 +6,7 @@ import { AuthError } from 'next-auth';
 import { getTranslations } from 'next-intl/server';
 import * as z from 'zod';
 
-import { signIn } from '@/auth';
+import { auth, signIn } from '@/auth';
 
 import { verifyAltchaPayload } from '@/lib/altcha';
 import {
@@ -18,7 +18,7 @@ import {
   generatePasswordResetToken,
   generateVerificationToken,
 } from '@/lib/tokens';
-import { getAuthSchemas } from '@/lib/validations/auth';
+import { getAuthSchemas, UpdateLocaleSchema } from '@/lib/validations/auth';
 
 export async function registerAction(formData: FormData, locale: string) {
   try {
@@ -58,6 +58,7 @@ export async function registerAction(formData: FormData, locale: string) {
       data: {
         email,
         password: hashedPassword,
+        locale,
       },
     });
 
@@ -258,5 +259,22 @@ export async function resetPasswordAction(formData: FormData, token: string) {
     return { success: true };
   } catch (error) {
     return { error: `Server error: ${error}` };
+  }
+}
+
+export async function updateUserLocaleAction(nextLocale: string) {
+  try {
+    const validated = UpdateLocaleSchema.safeParse({ locale: nextLocale });
+    if (!validated.success) return;
+
+    const session = await auth();
+    if (!session?.user?.id) return;
+
+    await prisma.user.update({
+      where: { id: session.user.id },
+      data: { locale: validated.data.locale },
+    });
+  } catch (error) {
+    console.error('Failed to update user locale:', error);
   }
 }

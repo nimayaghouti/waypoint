@@ -56,3 +56,7 @@ export const getAuthSchemas = (t: Record<string, string>) => {
     ResetPasswordSchema,
   };
 };
+
+export const UpdateLocaleSchema = z.object({
+  locale: z.enum(['en', 'fa']),
+});
