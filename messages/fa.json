@@ -428,5 +428,16 @@
     "paidByRequired": "لطفاً پرداخت‌کننده را مشخص کنید.",
     "sharesMismatch": "مجموع سهم‌ها باید برابر با کل مبلغ باشد.",
     "sharesRequired": "حداقل یک نفر باید در پرداخت شریک باشد."
+  },
+  "DigestEmail": {
+    "digestSubject": "خلاصه هفتگی سفرهای شما - Waypoint",
+    "digestTitle": "خلاصه هفتگی",
+    "greeting": "سلام",
+    "digestIntro": "در اینجا خلاصه‌ای از اتفاقات هفته گذشته در سفرهای شما آمده است:",
+    "newExpenses": "{count} هزینه جدید اضافه شد",
+    "newPolls": "{count} نظرسنجی جدید ایجاد شد",
+    "newPlaces": "{count} مکان جدید ثبت شد",
+    "viewTrip": "مشاهده سفر",
+    "ignoreMessage": "این یک خلاصه خودکار از طرف Waypoint است."
   }
 }

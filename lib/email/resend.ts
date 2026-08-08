@@ -1,5 +1,6 @@
 import { Resend } from 'resend';
 
+import DigestEmail from '@/components/emails/DigestEmail';
 import ResetPasswordEmail from '@/components/emails/ResetPasswordEmail';
 import VerifyEmail from '@/components/emails/VerifyEmail';
 
@@ -13,6 +14,26 @@ export interface EmailLabels {
   greeting: string;
   message: string;
   button: string;
+  ignore: string;
+}
+
+export interface TripSummary {
+  id: string;
+  name: string;
+  expensesCount: number;
+  pollsCount: number;
+  placesCount: number;
+}
+
+export interface DigestEmailLabels {
+  subject: string;
+  title: string;
+  greeting: string;
+  intro: string;
+  newExpenses: string;
+  newPolls: string;
+  newPlaces: string;
+  viewTrip: string;
   ignore: string;
 }
 
@@ -68,6 +89,38 @@ export async function sendPasswordResetEmail(
     if (error) return { success: false, error };
     return { success: true };
   } catch (error) {
+    return { success: false, error };
+  }
+}
+
+export async function sendDigestEmail(
+  email: string,
+  userName: string,
+  trips: TripSummary[],
+  locale: string,
+  labels: DigestEmailLabels,
+) {
+  const dir = locale === 'fa' ? 'rtl' : 'ltr';
+
+  try {
+    const { error } = await resend.emails.send({
+      from: 'Waypoint Updates <noreply@mail.way-point.ir>',
+      to: email,
+      subject: labels.subject,
+      react: DigestEmail({
+        userName,
+        trips,
+        appUrl: domain,
+        locale,
+        labels,
+        dir,
+      }) as React.ReactElement,
+    });
+
+    if (error) return { success: false, error };
+    return { success: true };
+  } catch (error) {
+    console.error('Digest Email sending failed:', error);
     return { success: false, error };
   }
 }

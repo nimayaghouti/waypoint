@@ -428,5 +428,16 @@
     "paidByRequired": "Please select who paid.",
     "sharesMismatch": "The total of shares must equal the total amount.",
     "sharesRequired": "At least one person must be selected to split the cost."
+  },
+  "DigestEmail": {
+    "digestSubject": "Your Weekly Trip Summary - Waypoint",
+    "digestTitle": "Weekly Digest",
+    "greeting": "Hello",
+    "digestIntro": "Here is a quick summary of what happened in your trips this past week:",
+    "newExpenses": "{count} new expense(s) added",
+    "newPolls": "{count} new poll(s) created",
+    "newPlaces": "{count} new place(s) pinned",
+    "viewTrip": "View Trip",
+    "ignoreMessage": "This is an automated summary from Waypoint."
   }
 }
