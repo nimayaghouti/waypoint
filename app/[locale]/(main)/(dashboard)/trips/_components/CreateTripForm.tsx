@@ -6,6 +6,8 @@ import { z } from 'zod';
 
 import { useRouter } from '@/i18n/navigation';
 
+import { CurrencyCombobox } from '@/components/shared/CurrencyCombobox';
+import { TimezoneCombobox } from '@/components/shared/TimezoneCombobox';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
@@ -15,18 +17,24 @@ import { getTripSchemas } from '@/lib/validations/trip';
 interface Props {
   labels: Record<string, string>;
   valLabels: Record<string, string>;
+  locale: string;
   onSuccess: () => void;
 }
 
 export default function CreateTripForm({
   labels,
   valLabels,
+  locale,
   onSuccess,
 }: Props) {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string[] | undefined>>(
     {},
   );
+  const defaultTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const [timezone, setTimezone] = useState(defaultTz);
+  const [currency, setCurrency] = useState('USD');
+  const [coverImage, setCoverImage] = useState('');
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -38,9 +46,14 @@ export default function CreateTripForm({
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
+    formData.append('timezone', timezone);
+    formData.append('currency', currency);
     const data = {
       name: formData.get('name') as string,
       description: formData.get('description') as string,
+      coverImage,
+      timezone,
+      currency,
     };
 
     const clientValidation = CreateTripSchema.safeParse(data);
@@ -85,6 +98,53 @@ export default function CreateTripForm({
         />
         {errors.name && (
           <p className="text-xs font-bold text-destructive">{errors.name[0]}</p>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-medium">{labels.timezoneLabel}</label>
+          <TimezoneCombobox
+            value={timezone}
+            onChange={setTimezone}
+            disabled={loading || isPending}
+            labels={{
+              placeholder: labels.timezoneLabel,
+              search: labels.searchTimezone,
+              noResult: labels.noResult,
+            }}
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-medium">{labels.currencyLabel}</label>
+          <CurrencyCombobox
+            value={currency}
+            onChange={setCurrency}
+            locale={locale}
+            disabled={loading || isPending}
+            labels={{
+              placeholder: labels.currencyLabel,
+              search: labels.searchCurrency,
+              noResult: labels.noResult,
+            }}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium">{labels.coverLabel}</label>
+        <Input
+          name="coverImage"
+          value={coverImage}
+          onChange={e => setCoverImage(e.target.value)}
+          placeholder={labels.coverPlaceholder}
+          disabled={loading || isPending}
+          dir="ltr"
+        />
+        {errors.coverImage && (
+          <p className="text-xs font-bold text-destructive">
+            {errors.coverImage[0]}
+          </p>
         )}
       </div>
 
