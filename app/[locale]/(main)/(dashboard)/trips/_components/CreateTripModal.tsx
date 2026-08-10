@@ -15,9 +15,10 @@ import CreateTripForm from './CreateTripForm';
 interface Props {
   labels: Record<string, string>;
   valLabels: Record<string, string>;
+  locale: string;
 }
 
-export function CreateTripModal({ labels, valLabels }: Props) {
+export function CreateTripModal({ labels, valLabels, locale }: Props) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
@@ -42,6 +43,7 @@ export function CreateTripModal({ labels, valLabels }: Props) {
           <CreateTripForm
             labels={labels}
             valLabels={valLabels}
+            locale={locale}
             onSuccess={() => handleOpenChange(false)}
           />
         </div>
