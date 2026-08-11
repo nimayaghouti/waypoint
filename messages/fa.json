@@ -215,7 +215,14 @@
     "submitButton": "ایجاد سفر",
     "submitLoading": "در حال ایجاد...",
     "backButton": "انصراف",
-    "successToast": "سفر با موفقیت ایجاد شد!"
+    "successToast": "سفر با موفقیت ایجاد شد!",
+    "timezoneLabel": "منطقه زمانی",
+    "currencyLabel": "ارز پیش‌فرض",
+    "searchTimezone": "جستجوی منطقه زمانی...",
+    "searchCurrency": "جستجوی ارز...",
+    "noResult": "نتیجه‌ای یافت نشد.",
+    "coverLabel": "لینک عکس کاور (اختیاری)",
+    "coverPlaceholder": "https://example.com/image.jpg"
   },
   "TripLayout": {
     "inviteButton": "دعوت اعضا",
@@ -223,6 +230,40 @@
     "copyLink": "کپی لینک دعوت",
     "codeCopied": "کد دعوت کپی شد",
     "linkCopied": "لینک دعوت کپی شد"
+  },
+  "TripSettings": {
+    "settingsButton": "تنظیمات سفر",
+    "dialogTitle": "تنظیمات سفر",
+    "dialogDesc": "منطقه زمانی مرجع و ارز پیش‌فرض سفر خود را مدیریت کنید. توجه: تغییر ارز پیش‌فرض تأثیری روی هزینه‌های ثبت‌شده‌ی قبلی نخواهد داشت.",
+    "timezoneLabel": "منطقه زمانی (Timezone)",
+    "currencyLabel": "ارز پیش‌فرض",
+    "searchTimezone": "جستجوی منطقه زمانی...",
+    "searchCurrency": "جستجوی ارز...",
+    "noResult": "نتیجه‌ای یافت نشد.",
+    "save": "ذخیره تنظیمات",
+    "saving": "در حال ذخیره...",
+    "success": "تنظیمات با موفقیت به‌روزرسانی شد!",
+    "errorGeneric": "به‌روزرسانی تنظیمات با خطا مواجه شد."
+  },
+  "TripInfo": {
+    "editButton": "ویرایش اطلاعات",
+    "dialogTitle": "اطلاعات سفر",
+    "dialogDesc": "نام، توضیحات و عکس کاور سفر خود را ویرایش کنید.",
+    "nameLabel": "نام سفر",
+    "descLabel": "توضیحات",
+    "coverLabel": "لینک عکس کاور",
+    "coverPlaceholder": "https://example.com/image.jpg",
+    "save": "ذخیره تغییرات",
+    "success": "اطلاعات سفر با موفقیت به‌روزرسانی شد!",
+    "errorGeneric": "به‌روزرسانی اطلاعات سفر با خطا مواجه شد."
+  },
+  "TripStatus": {
+    "statusPLANNING": "در حال برنامه‌ریزی",
+    "statusCONFIRMED": "تأیید شده",
+    "statusCOMPLETED": "تکمیل شده",
+    "statusARCHIVED": "بایگانی شده",
+    "success": "وضعیت سفر به‌روزرسانی شد!",
+    "errorGeneric": "به‌روزرسانی وضعیت با خطا مواجه شد."
   },
   "TripNavigation": {
     "overview": "نمای کلی",

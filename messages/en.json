@@ -215,7 +215,14 @@
     "submitButton": "Create Trip",
     "submitLoading": "Creating...",
     "backButton": "Cancel",
-    "successToast": "Trip created successfully!"
+    "successToast": "Trip created successfully!",
+    "timezoneLabel": "Timezone",
+    "currencyLabel": "Default Currency",
+    "searchTimezone": "Search timezone...",
+    "searchCurrency": "Search currency...",
+    "noResult": "No results found.",
+    "coverLabel": "Cover Image URL (optional)",
+    "coverPlaceholder": "https://example.com/image.jpg"
   },
   "TripLayout": {
     "inviteButton": "Invite Members",
@@ -223,6 +230,40 @@
     "copyLink": "Copy Invite Link",
     "codeCopied": "Invite code copied to clipboard",
     "linkCopied": "Invite link copied to clipboard"
+  },
+  "TripSettings": {
+    "settingsButton": "Trip Settings",
+    "dialogTitle": "Trip Settings",
+    "dialogDesc": "Manage your trip's primary timezone and default currency. Note: Changing the default currency will not affect existing expenses.",
+    "timezoneLabel": "Timezone",
+    "currencyLabel": "Default Currency",
+    "searchTimezone": "Search timezone...",
+    "searchCurrency": "Search currency...",
+    "noResult": "No results found.",
+    "save": "Save Changes",
+    "saving": "Saving...",
+    "success": "Settings updated successfully!",
+    "errorGeneric": "Failed to update settings."
+  },
+  "TripInfo": {
+    "editButton": "Edit Info",
+    "dialogTitle": "Trip Information",
+    "dialogDesc": "Update your trip's name, description, and cover image.",
+    "nameLabel": "Trip Name",
+    "descLabel": "Description",
+    "coverLabel": "Cover Image URL",
+    "coverPlaceholder": "https://example.com/image.jpg",
+    "save": "Save Changes",
+    "success": "Trip info updated successfully!",
+    "errorGeneric": "Failed to update trip info."
+  },
+  "TripStatus": {
+    "statusPLANNING": "Planning",
+    "statusCONFIRMED": "Confirmed",
+    "statusCOMPLETED": "Completed",
+    "statusARCHIVED": "Archived",
+    "success": "Trip status updated!",
+    "errorGeneric": "Failed to update status."
   },
   "TripNavigation": {
     "overview": "Overview",

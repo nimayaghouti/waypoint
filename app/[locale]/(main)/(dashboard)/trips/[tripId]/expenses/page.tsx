@@ -142,34 +142,72 @@ export default async function TripExpensesPage({
   const canEdit =
     currentMember.role === 'OWNER' || currentMember.role === 'EDITOR';
 
-  const balances = trip.members.map(member => {
-    const totalPaidExp = expenses
-      .filter(e => e.paidById === member.userId)
-      .reduce((sum, e) => sum + Number(e.amount), 0);
+  const balanceMap = new Map<string, Record<string, number>>();
 
-    const totalConsumedExp = expenses.reduce((sum, e) => {
-      const myShare = e.shares.find(s => s.userId === member.userId);
-      return sum + (myShare ? Number(myShare.amount) : 0);
-    }, 0);
+  trip.members.forEach(m => balanceMap.set(m.userId, {}));
 
-    const totalSettlementsSent = settlements
-      .filter(s => s.fromUserId === member.userId)
-      .reduce((sum, s) => sum + Number(s.amount), 0);
+  expenses.forEach(e => {
+    const curr = e.currency;
+    if (e.paidById) {
+      const userBals = balanceMap.get(e.paidById);
+      if (userBals) userBals[curr] = (userBals[curr] || 0) + Number(e.amount);
+    }
+    e.shares.forEach(s => {
+      const userBals = balanceMap.get(s.userId);
+      if (userBals) userBals[curr] = (userBals[curr] || 0) - Number(s.amount);
+    });
+  });
 
-    const totalSettlementsReceived = settlements
-      .filter(s => s.toUserId === member.userId)
-      .reduce((sum, s) => sum + Number(s.amount), 0);
+  settlements.forEach(s => {
+    const curr = s.currency;
+    if (s.fromUserId) {
+      const userBals = balanceMap.get(s.fromUserId);
+      if (userBals) userBals[curr] = (userBals[curr] || 0) + Number(s.amount);
+    }
+    if (s.toUserId) {
+      const userBals = balanceMap.get(s.toUserId);
+      if (userBals) userBals[curr] = (userBals[curr] || 0) - Number(s.amount);
+    }
+  });
 
-    const totalPaid = totalPaidExp + totalSettlementsSent;
-    const totalConsumed = totalConsumedExp + totalSettlementsReceived;
+  interface MemberBalance {
+    userId: string;
+    name: string;
+    image: string | null;
+    netBalance: number;
+    currency: string;
+  }
 
-    return {
-      userId: member.userId,
-      name: member.user.name || member.user.email.split('@')[0],
-      image: member.user.image,
-      netBalance: Math.round((totalPaid - totalConsumed) * 100) / 100,
-      currency: trip.defaultCurrency,
-    };
+  const balances: MemberBalance[] = [];
+
+  trip.members.forEach(m => {
+    const userBals = balanceMap.get(m.userId);
+    let hasBalance = false;
+
+    if (userBals) {
+      Object.entries(userBals).forEach(([curr, net]) => {
+        if (Math.abs(net) > 0.005) {
+          hasBalance = true;
+          balances.push({
+            userId: m.userId,
+            name: m.user.name || m.user.email.split('@')[0],
+            image: m.user.image,
+            netBalance: Math.round(net * 100) / 100,
+            currency: curr,
+          });
+        }
+      });
+    }
+
+    if (!hasBalance) {
+      balances.push({
+        userId: m.userId,
+        name: m.user.name || m.user.email.split('@')[0],
+        image: m.user.image,
+        netBalance: 0,
+        currency: trip.defaultCurrency,
+      });
+    }
   });
 
   const formattedExpenses = expenses.map(e => ({

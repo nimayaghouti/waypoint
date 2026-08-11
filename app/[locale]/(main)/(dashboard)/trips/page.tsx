@@ -1,20 +1,12 @@
 import { Compass, Plus } from 'lucide-react';
 
 import { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
-
-import { Link } from '@/i18n/navigation';
+import { getLocale, getTranslations } from 'next-intl/server';
 
 import { auth } from '@/auth';
 
-import { Badge } from '@/components/ui/badge';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import TripCard from '@/components/trip/TripCard';
+import { Card, CardContent } from '@/components/ui/card';
 
 import prisma from '@/lib/prisma';
 
@@ -36,6 +28,7 @@ export async function generateMetadata({
 
 export default async function TripsDashboardPage() {
   const session = await auth();
+  const locale = await getLocale();
   const t = await getTranslations('TripsDashboard');
 
   const tModal = await getTranslations('CreateTrip');
@@ -52,6 +45,13 @@ export default async function TripsDashboardPage() {
     submitLoading: tModal('submitLoading'),
     backButton: tModal('backButton'),
     successToast: tModal('successToast'),
+    timezoneLabel: tModal('timezoneLabel'),
+    currencyLabel: tModal('currencyLabel'),
+    searchTimezone: tModal('searchTimezone'),
+    searchCurrency: tModal('searchCurrency'),
+    noResult: tModal('noResult'),
+    coverLabel: tModal('coverLabel'),
+    coverPlaceholder: tModal('coverPlaceholder'),
   };
 
   const validationLabels = {
@@ -98,37 +98,21 @@ export default async function TripsDashboardPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {userTrips.map(({ trip, role }) => (
-            <Link key={trip.id} href={`/trips/${trip.id}`}>
-              <Card className="h-full hover:border-primary/50 hover:shadow-md transition-all group cursor-pointer">
-                <CardHeader className="pb-3">
-                  <div className="flex justify-between items-start mb-2">
-                    <Badge
-                      variant={
-                        trip.status === 'PLANNING' ? 'secondary' : 'default'
-                      }
-                    >
-                      {t(`status${trip.status}`)}
-                    </Badge>
-                    <Badge variant="outline" className="text-xs font-normal">
-                      {t(`role${role}`)}
-                    </Badge>
-                  </div>
-                  <CardTitle className="text-xl group-hover:text-primary transition-colors line-clamp-1">
-                    {trip.name}
-                  </CardTitle>
-                  {trip.description && (
-                    <CardDescription className="line-clamp-2 mt-2">
-                      {trip.description}
-                    </CardDescription>
-                  )}
-                </CardHeader>
-              </Card>
-            </Link>
+            <TripCard
+              key={trip.id}
+              trip={trip}
+              statusLabel={t(`status${trip.status}`)}
+              roleLabel={t(`role${role}`)}
+            />
           ))}
         </div>
       )}
 
-      <CreateTripModal labels={modalLabels} valLabels={validationLabels} />
+      <CreateTripModal
+        labels={modalLabels}
+        valLabels={validationLabels}
+        locale={locale}
+      />
     </div>
   );
 }

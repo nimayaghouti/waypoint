@@ -22,11 +22,13 @@ import { Switch } from '@/components/ui/switch';
 import { TimePicker } from '@/components/ui/time-picker';
 
 import { createPollAction } from '@/lib/actions/poll';
+import { zonedTimeToUtc } from '@/lib/date-helpers';
 import { getPollSchemas } from '@/lib/validations/poll';
 
 interface Props {
   tripId: string;
   locale: string;
+  tripTimezone: string;
   labels: Record<string, string>;
   valLabels: Record<string, string>;
 }
@@ -41,6 +43,7 @@ function getMinClosesAt() {
 export default function CreatePollModal({
   tripId,
   locale,
+  tripTimezone,
   labels,
   valLabels,
 }: Props) {
@@ -117,7 +120,15 @@ export default function CreatePollModal({
     setErrors({});
     setLoading(true);
 
-    const closesAtUtcIso = closesAt ? new Date(closesAt).toISOString() : '';
+    let closesAtUtcIso = '';
+    if (closesDateKey && closesTime) {
+      const exactUtcDate = zonedTimeToUtc(
+        closesDateKey,
+        closesTime,
+        tripTimezone,
+      );
+      closesAtUtcIso = exactUtcDate.toISOString();
+    }
     const data = {
       question,
       type: isMulti ? 'MULTI' : 'SINGLE',
@@ -288,7 +299,7 @@ export default function CreatePollModal({
                 onClick={handleAddOption}
                 disabled={loading || isPending}
               >
-                <Plus className="size-4 rtl:ml-2 ltr:mr-2" /> {labels.addOption}
+                <Plus className="size-4 me-2" /> {labels.addOption}
               </Button>
             </div>
 

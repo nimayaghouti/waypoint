@@ -129,6 +129,7 @@ export async function addSettlementAction(
   fromUserId: string,
   toUserId: string,
   amount: number,
+  currency: string,
 ) {
   try {
     const session = await auth();
@@ -164,7 +165,7 @@ export async function addSettlementAction(
         fromUserId,
         toUserId,
         amount: new Prisma.Decimal(Math.round(amount * 100) / 100),
-        currency: trip.defaultCurrency,
+        currency,
         status: 'CONFIRMED',
         settledAt: new Date(),
       },

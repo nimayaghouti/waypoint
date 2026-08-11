@@ -101,7 +101,7 @@ function BalancesList({
     <div className="flex flex-col gap-3">
       {balances.map(b => (
         <BalanceRow
-          key={b.userId}
+          key={`${b.userId}-${b.currency}`}
           balance={b}
           labels={labels}
           format={format}
