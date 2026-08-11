@@ -51,6 +51,7 @@ export default function SettleUpModal({
     fromUserId: string,
     toUserId: string,
     amount: number,
+    txCurrency: string,
     index: number,
   ) => {
     if (!canEdit) return;
@@ -62,6 +63,7 @@ export default function SettleUpModal({
         fromUserId,
         toUserId,
         amount,
+        txCurrency,
       );
       if (result.error) {
         toast.error('Failed to record payment');
@@ -159,6 +161,7 @@ export default function SettleUpModal({
                             tx.fromUser.userId,
                             tx.toUser.userId,
                             tx.amount,
+                            tx.currency,
                             idx,
                           )
                         }
@@ -166,7 +169,7 @@ export default function SettleUpModal({
                       >
                         {settlingId === idx.toString() ? (
                           <>
-                            <Loader2 className="size-3 animate-spin rtl:ml-1 ltr:mr-1" />
+                            <Loader2 className="size-3 animate-spin me-1" />
                             {labels.settling}
                           </>
                         ) : (
