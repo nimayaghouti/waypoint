@@ -92,7 +92,7 @@ export default async function TripPollsPage({
     closesAtFuture: tVal('closesAtFuture'),
   };
 
-  const [member, polls] = await Promise.all([
+  const [member, polls, trip] = await Promise.all([
     prisma.tripMember.findUnique({
       where: { tripId_userId: { tripId, userId: session.user.id } },
     }),
@@ -105,7 +105,13 @@ export default async function TripPollsPage({
       },
       orderBy: { createdAt: 'desc' },
     }),
+    prisma.trip.findUnique({
+      where: { id: tripId },
+      select: { timezone: true },
+    }),
   ]);
+
+  if (!trip) return null;
 
   const currentUserRole = member?.role ?? 'VIEWER';
 
@@ -119,6 +125,7 @@ export default async function TripPollsPage({
         <CreatePollModal
           locale={locale}
           tripId={tripId}
+          tripTimezone={trip.timezone}
           labels={labels}
           valLabels={valLabels}
         />
