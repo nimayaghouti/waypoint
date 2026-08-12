@@ -7,10 +7,12 @@ import * as z from 'zod';
 
 import { auth } from '@/auth';
 
+import { transferOwnershipOrArchive } from '@/lib/actions/membership';
 import prisma from '@/lib/prisma';
 import { getTripSchemas } from '@/lib/validations/trip';
 
 const TRIP_LAYOUT_PATH = '/[locale]/(main)/(dashboard)/trips/[tripId]';
+const TRIPS_LIST_PATH = '/[locale]/(main)/(dashboard)/trips';
 
 export async function createTripAction(formData: FormData) {
   try {
@@ -217,6 +219,34 @@ export async function updateTripStatusAction(
     return { success: true };
   } catch (error) {
     console.error(error);
+    return { error: 'Server error' };
+  }
+}
+
+export async function leaveTripAction(tripId: string) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) return { error: 'Unauthorized' };
+    const userId = session.user.id;
+
+    const member = await prisma.tripMember.findUnique({
+      where: { tripId_userId: { tripId, userId } },
+    });
+    if (!member) return { error: 'NotMember' };
+
+    const transferResult = await transferOwnershipOrArchive(tripId, userId);
+    if (transferResult.error) return { error: transferResult.error };
+
+    await prisma.tripMember.delete({
+      where: { tripId_userId: { tripId, userId } },
+    });
+
+    revalidatePath(TRIP_LAYOUT_PATH, 'layout');
+    revalidatePath(TRIPS_LIST_PATH, 'page');
+
+    return { success: true };
+  } catch (error) {
+    console.error('Leave Trip Error:', error);
     return { error: 'Server error' };
   }
 }
