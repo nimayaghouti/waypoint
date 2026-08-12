@@ -57,7 +57,7 @@ export default function TripInviteActions({
           className="gap-2 cursor-pointer bg-background/90 backdrop-blur-sm shadow-sm"
         >
           <UserPlus className="size-4" />
-          <span className="hidden md:inline">{labels.inviteButton}</span>
+          <span className="hidden lg:inline">{labels.inviteButton}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">

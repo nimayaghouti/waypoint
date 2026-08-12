@@ -64,7 +64,7 @@ export default function TripSettingsDialog({
           className="gap-2 cursor-pointer bg-background/90 backdrop-blur-sm shadow-sm"
         >
           <Settings className="size-4" />
-          <span className="hidden md:inline">{labels.settingsButton}</span>
+          <span className="hidden lg:inline">{labels.settingsButton}</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">

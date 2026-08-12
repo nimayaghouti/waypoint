@@ -72,7 +72,7 @@ export default function TripInfoDialog({
           className="gap-2 cursor-pointer bg-background/90 backdrop-blur-sm shadow-sm"
         >
           <Pencil className="size-4" />
-          <span className="hidden md:inline">{labels.editButton}</span>
+          <span className="hidden lg:inline">{labels.editButton}</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
