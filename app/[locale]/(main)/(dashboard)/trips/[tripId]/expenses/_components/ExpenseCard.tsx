@@ -7,16 +7,18 @@ import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import UserDisplay from '@/components/shared/UserDisplay';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
 import { deleteExpenseAction } from '@/lib/actions/expense';
 
+import { UserSummary } from '@/types/user';
+
 interface ShareInfo {
-  userId: string;
+  userId: string | null;
   amount: number;
-  user: { name: string | null; email: string };
+  user: Pick<UserSummary, 'name' | 'email'> | null;
 }
 
 interface ExpenseData {
@@ -25,12 +27,7 @@ interface ExpenseData {
   amount: number;
   currency: string;
   createdAt: Date;
-  paidBy: {
-    id: string;
-    name: string | null;
-    email: string;
-    image: string | null;
-  } | null;
+  paidBy: UserSummary | null;
   shares: ShareInfo[];
 }
 
@@ -54,6 +51,7 @@ export default function ExpenseCard({
   const payerName =
     expense.paidBy?.name ||
     expense.paidBy?.email.split('@')[0] ||
+    labels.deletedUser ||
     labels.unknownUser ||
     'Unknown';
 
@@ -71,10 +69,12 @@ export default function ExpenseCard({
       <Card className="p-4 border-border/50 shadow-sm hover:shadow-md transition-all group">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <Avatar className="size-10">
-              <AvatarImage src={expense.paidBy?.image || ''} />
-              <AvatarFallback>{payerName.charAt(0)}</AvatarFallback>
-            </Avatar>
+            <UserDisplay
+              user={expense.paidBy}
+              deletedLabel={labels.deletedUser}
+              avatarClassName="size-10"
+              textClassName="hidden"
+            />
             <div>
               <h4 className="font-semibold text-base">{expense.description}</h4>
               <p className="text-xs text-muted-foreground">
