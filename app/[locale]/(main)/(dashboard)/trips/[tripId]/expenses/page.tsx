@@ -10,11 +10,14 @@ import { auth } from '@/auth';
 import { Card, CardContent } from '@/components/ui/card';
 
 import prisma from '@/lib/prisma';
+import { MemberBalance } from '@/lib/settlement';
 
 import AddExpenseModal from './_components/AddExpenseModal';
 import BalancesSummary from './_components/BalancesSummary';
 import ExpenseCard from './_components/ExpenseCard';
 import SettlementCard from './_components/SettlementCard';
+
+const DELETED_USER_KEY = 'DELETED_USER' as const;
 
 export async function generateMetadata({
   params,
@@ -44,9 +47,10 @@ export default async function TripExpensesPage({
 
   if (!session?.user?.id) return redirect({ href: '/login', locale });
 
-  const [t, tVal] = await Promise.all([
+  const [t, tVal, tShared] = await Promise.all([
     getTranslations('Expenses'),
     getTranslations('ExpenseValidations'),
+    getTranslations('Shared'),
   ]);
 
   const labels = {
@@ -83,12 +87,14 @@ export default async function TripExpensesPage({
     settling: t('settling'),
     noDebts: t('noDebts'),
     owesTo: t('owesTo'),
+    settleError: t('settleError'),
     successSettled: t('successSettled'),
     paymentsTitle: t('paymentsTitle'),
     expensesListTitle: t('expensesListTitle'),
     deletePaymentConfirm: t('deletePaymentConfirm'),
     successPaymentDeleted: t('successPaymentDeleted'),
     paidTo: t('paidTo'),
+    deletedUser: tShared('deletedUser'),
   };
 
   const valLabels = {
@@ -116,7 +122,7 @@ export default async function TripExpensesPage({
         paidBy: { select: { id: true, name: true, email: true, image: true } },
         shares: {
           include: {
-            user: { select: { name: true, email: true } },
+            user: { select: { name: true, email: true, image: true } },
           },
         },
       },
@@ -142,73 +148,122 @@ export default async function TripExpensesPage({
   const canEdit =
     currentMember.role === 'OWNER' || currentMember.role === 'EDITOR';
 
+  const userInfoMap = new Map<
+    string,
+    { name: string | null; email: string; image: string | null }
+  >();
+
+  trip.members.forEach(m => {
+    userInfoMap.set(m.userId, {
+      name: m.user.name,
+      email: m.user.email,
+      image: m.user.image,
+    });
+  });
+  expenses.forEach(e => {
+    if (e.paidBy && e.paidById && !userInfoMap.has(e.paidById)) {
+      userInfoMap.set(e.paidById, {
+        name: e.paidBy.name,
+        email: e.paidBy.email,
+        image: e.paidBy.image,
+      });
+    }
+    e.shares.forEach(s => {
+      if (s.user && s.userId && !userInfoMap.has(s.userId)) {
+        userInfoMap.set(s.userId, {
+          name: s.user.name,
+          email: s.user.email,
+          image: s.user.image,
+        });
+      }
+    });
+  });
+  settlements.forEach(s => {
+    if (s.fromUser && s.fromUserId && !userInfoMap.has(s.fromUserId)) {
+      userInfoMap.set(s.fromUserId, {
+        name: s.fromUser.name,
+        email: s.fromUser.email,
+        image: s.fromUser.image,
+      });
+    }
+    if (s.toUser && s.toUserId && !userInfoMap.has(s.toUserId)) {
+      userInfoMap.set(s.toUserId, {
+        name: s.toUser.name,
+        email: s.toUser.email,
+        image: s.toUser.image,
+      });
+    }
+  });
+
   const balanceMap = new Map<string, Record<string, number>>();
 
   trip.members.forEach(m => balanceMap.set(m.userId, {}));
 
   expenses.forEach(e => {
     const curr = e.currency;
-    if (e.paidById) {
-      const userBals = balanceMap.get(e.paidById);
-      if (userBals) userBals[curr] = (userBals[curr] || 0) + Number(e.amount);
-    }
+    const payerId = e.paidById || DELETED_USER_KEY;
+
+    if (!balanceMap.has(payerId)) balanceMap.set(payerId, {});
+    const userBals = balanceMap.get(payerId)!;
+    userBals[curr] = (userBals[curr] || 0) + Number(e.amount);
+
     e.shares.forEach(s => {
-      const userBals = balanceMap.get(s.userId);
-      if (userBals) userBals[curr] = (userBals[curr] || 0) - Number(s.amount);
+      const shareId = s.userId || DELETED_USER_KEY;
+      if (!balanceMap.has(shareId)) balanceMap.set(shareId, {});
+      const shareBals = balanceMap.get(shareId)!;
+      shareBals[curr] = (shareBals[curr] || 0) - Number(s.amount);
     });
   });
 
   settlements.forEach(s => {
     const curr = s.currency;
-    if (s.fromUserId) {
-      const userBals = balanceMap.get(s.fromUserId);
-      if (userBals) userBals[curr] = (userBals[curr] || 0) + Number(s.amount);
-    }
-    if (s.toUserId) {
-      const userBals = balanceMap.get(s.toUserId);
-      if (userBals) userBals[curr] = (userBals[curr] || 0) - Number(s.amount);
-    }
-  });
+    const fromId = s.fromUserId || DELETED_USER_KEY;
+    const toId = s.toUserId || DELETED_USER_KEY;
 
-  interface MemberBalance {
-    userId: string;
-    name: string;
-    image: string | null;
-    netBalance: number;
-    currency: string;
-  }
+    if (!balanceMap.has(fromId)) balanceMap.set(fromId, {});
+    const fromBals = balanceMap.get(fromId)!;
+    fromBals[curr] = (fromBals[curr] || 0) + Number(s.amount);
+
+    if (!balanceMap.has(toId)) balanceMap.set(toId, {});
+    const toBals = balanceMap.get(toId)!;
+    toBals[curr] = (toBals[curr] || 0) - Number(s.amount);
+  });
 
   const balances: MemberBalance[] = [];
 
-  trip.members.forEach(m => {
-    const userBals = balanceMap.get(m.userId);
+  for (const [userId, userBals] of balanceMap.entries()) {
     let hasBalance = false;
+    const isDeleted = userId === DELETED_USER_KEY;
+    const info = isDeleted ? null : (userInfoMap.get(userId) ?? null);
+    const member = isDeleted
+      ? null
+      : trip.members.find(m => m.userId === userId);
 
-    if (userBals) {
-      Object.entries(userBals).forEach(([curr, net]) => {
-        if (Math.abs(net) > 0.005) {
-          hasBalance = true;
-          balances.push({
-            userId: m.userId,
-            name: m.user.name || m.user.email.split('@')[0],
-            image: m.user.image,
-            netBalance: Math.round(net * 100) / 100,
-            currency: curr,
-          });
-        }
-      });
-    }
+    Object.entries(userBals).forEach(([curr, net]) => {
+      if (Math.abs(net) > 0.005) {
+        hasBalance = true;
+        balances.push({
+          userId: isDeleted ? null : userId,
+          name: info ? info.name || info.email.split('@')[0] : null,
+          image: info?.image ?? null,
+          netBalance: Math.round(net * 100) / 100,
+          currency: curr,
+          isActiveMember: !isDeleted && !!member,
+        });
+      }
+    });
 
-    if (!hasBalance) {
+    if (!hasBalance && !isDeleted && member) {
       balances.push({
-        userId: m.userId,
-        name: m.user.name || m.user.email.split('@')[0],
-        image: m.user.image,
+        userId,
+        name: member.user.name || member.user.email.split('@')[0],
+        image: member.user.image,
         netBalance: 0,
         currency: trip.defaultCurrency,
+        isActiveMember: true,
       });
     }
-  });
+  }
 
   const formattedExpenses = expenses.map(e => ({
     ...e,
@@ -221,7 +276,7 @@ export default async function TripExpensesPage({
   }));
 
   return (
-    <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full pb-12 md:pb-0">
+    <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full pb-12 lg:pb-0">
       <div className="flex flex-wrap justify-between items-end gap-4">
         <div className="space-y-2">
           <h2 className="text-2xl font-bold">{labels.title}</h2>
@@ -252,8 +307,8 @@ export default async function TripExpensesPage({
         </Card>
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="md:col-span-2 flex flex-col gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 flex flex-col gap-8">
               {formattedExpenses.length > 0 && (
                 <div className="flex flex-col gap-3">
                   <h3 className="text-lg font-bold text-foreground/70 dark:text-foreground/80 mb-1">
@@ -299,7 +354,7 @@ export default async function TripExpensesPage({
               )}
             </div>
 
-            <div className="hidden md:block w-full">
+            <div className="hidden lg:block w-full">
               <BalancesSummary
                 variant="desktop"
                 tripId={tripId}

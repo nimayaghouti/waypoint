@@ -29,7 +29,7 @@ export default function TripCard({
 }: TripCardProps) {
   return (
     <Link href={`/trips/${trip.id}`}>
-      <Card className="relative h-full min-h-52 overflow-hidden hover:border-primary/50 hover:shadow-md transition-all group cursor-pointer">
+      <Card className="relative h-full min-h-52 overflow-hidden hover:border-primary/50 hover:shadow-md transition-all group cursor-pointer [content-visibility:auto] [contain-intrinsic-size:auto_208px]">
         <div className="absolute inset-0">
           {trip.coverImage ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -51,13 +51,13 @@ export default function TripCard({
           <div className="flex justify-between items-start gap-2">
             <Badge
               variant={trip.status === 'PLANNING' ? 'secondary' : 'default'}
-              className="backdrop-blur-sm shadow-sm"
+              className="shadow-sm"
             >
               {statusLabel}
             </Badge>
             <Badge
               variant="outline"
-              className="text-xs font-normal bg-background/20 backdrop-blur-sm border-white/30 text-white"
+              className="text-xs font-normal bg-black/30 border-white/30 text-white"
             >
               {roleLabel}
             </Badge>

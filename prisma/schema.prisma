@@ -262,8 +262,8 @@ model ExpenseShare {
   expenseId   String
   expense     Expense  @relation(fields: [expenseId], references: [id], onDelete: Cascade)
 
-  userId      String
-  user        User     @relation("ExpenseShareUser", fields: [userId], references: [id], onDelete: Cascade)
+  userId      String?
+  user        User?    @relation("ExpenseShareUser", fields: [userId], references: [id], onDelete: SetNull)
 
   amount      Decimal  @db.Decimal(12, 2)
 

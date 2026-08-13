@@ -265,6 +265,15 @@
     "success": "Trip status updated!",
     "errorGeneric": "Failed to update status."
   },
+  "LeaveTrip": {
+    "leaveButton": "Leave Trip",
+    "dialogTitle": "Leave this trip?",
+    "dialogDesc": "You'll lose access to this trip's plans, expenses, and other content. If you're the owner, ownership will be transferred to another member automatically.",
+    "cancel": "Cancel",
+    "confirmButton": "Leave",
+    "success": "You left the trip.",
+    "errorGeneric": "Something went wrong. Please try again."
+  },
   "TripNavigation": {
     "overview": "Overview",
     "calendar": "Calendar",
@@ -456,6 +465,7 @@
     "settling": "Recording...",
     "noDebts": "Everyone is settled up!",
     "owesTo": "owes",
+    "settleError": "Failed to record payment.",
     "successSettled": "Payment recorded successfully.",
     "paymentsTitle": "Payment History",
     "expensesListTitle": "Group Expenses",
@@ -469,6 +479,9 @@
     "paidByRequired": "Please select who paid.",
     "sharesMismatch": "The total of shares must equal the total amount.",
     "sharesRequired": "At least one person must be selected to split the cost."
+  },
+  "Shared": {
+    "deletedUser": "Deleted User"
   },
   "DigestEmail": {
     "digestSubject": "Your Weekly Trip Summary - Waypoint",

@@ -6,6 +6,12 @@ export interface BalanceData {
   currency: string;
 }
 
+export interface MemberBalance extends Omit<BalanceData, 'userId' | 'name'> {
+  userId: string | null;
+  name: string | null;
+  isActiveMember: boolean;
+}
+
 export interface SuggestedTransaction {
   fromUser: BalanceData;
   toUser: BalanceData;

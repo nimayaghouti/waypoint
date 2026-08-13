@@ -19,12 +19,15 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 import { addSettlementAction } from '@/lib/actions/expense';
-import { BalanceData, calculateOptimalSettlements } from '@/lib/settlement';
+import {
+  BalanceData,
+  MemberBalance,
+  calculateOptimalSettlements,
+} from '@/lib/settlement';
 
 interface Props {
   tripId: string;
-  balances: BalanceData[];
-  currency: string;
+  balances: MemberBalance[];
   labels: Record<string, string>;
   canEdit: boolean;
 }
@@ -32,7 +35,6 @@ interface Props {
 export default function SettleUpModal({
   tripId,
   balances,
-  currency,
   labels,
   canEdit,
 }: Props) {
@@ -42,9 +44,23 @@ export default function SettleUpModal({
 
   const format = useFormatter();
 
-  const suggestedTransactions = useMemo(
-    () => calculateOptimalSettlements(balances),
+  const settleableBalances = useMemo(
+    () =>
+      balances
+        .filter(b => b.isActiveMember && b.userId !== null && b.name !== null)
+        .map((b): BalanceData => ({
+          userId: b.userId as string,
+          name: b.name as string,
+          image: b.image,
+          netBalance: b.netBalance,
+          currency: b.currency,
+        })),
     [balances],
+  );
+
+  const suggestedTransactions = useMemo(
+    () => calculateOptimalSettlements(settleableBalances),
+    [settleableBalances],
   );
 
   const handleRecordPayment = (
@@ -66,7 +82,7 @@ export default function SettleUpModal({
         txCurrency,
       );
       if (result.error) {
-        toast.error('Failed to record payment');
+        toast.error(labels.settleError);
       } else {
         toast.success(labels.successSettled);
       }
@@ -149,7 +165,7 @@ export default function SettleUpModal({
                     >
                       {format.number(tx.amount, {
                         style: 'currency',
-                        currency,
+                        currency: tx.currency,
                       })}
                     </span>
                     {canEdit && (
