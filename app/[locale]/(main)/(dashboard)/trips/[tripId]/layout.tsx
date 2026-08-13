@@ -8,6 +8,7 @@ import prisma from '@/lib/prisma';
 
 import TripStatusControl from '@/components/trip/TripStatusControl';
 
+import LeaveTripButton from './_components/LeaveTripButton';
 import TripInfoDialog from './_components/TripInfoDialog';
 import TripInviteActions from './_components/TripInviteActions';
 import TripSettingsDialog from './_components/TripSettingsDialog';
@@ -55,6 +56,7 @@ export default async function TripDashboardLayout({
   const tSettings = await getTranslations('TripSettings');
   const tInfo = await getTranslations('TripInfo');
   const tStatus = await getTranslations('TripStatus');
+  const tLeave = await getTranslations('LeaveTrip');
 
   const layoutLabels = {
     inviteButton: tLayout('inviteButton'),
@@ -106,6 +108,15 @@ export default async function TripDashboardLayout({
     success: tStatus('success'),
     errorGeneric: tStatus('errorGeneric'),
   };
+  const leaveLabels = {
+    leaveButton: tLeave('leaveButton'),
+    dialogTitle: tLeave('dialogTitle'),
+    dialogDesc: tLeave('dialogDesc'),
+    cancel: tLeave('cancel'),
+    confirmButton: tLeave('confirmButton'),
+    success: tLeave('success'),
+    errorGeneric: tLeave('errorGeneric'),
+  };
 
   return (
     <div className="flex flex-col min-h-full bg-muted/10">
@@ -124,7 +135,7 @@ export default async function TripDashboardLayout({
                 <div className="absolute -z-5 inset-0 bg-linear-to-t from-black/75 via-black/35 to-transparent" />
               </>
             )}
-            <div className="relative flex-1 min-w-0 rounded-xl overflow-hidden">
+            <div className="relative flex-1 min-w-0 overflow-hidden">
               <div className="relative z-10 flex flex-col gap-4">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h1
@@ -173,6 +184,7 @@ export default async function TripDashboardLayout({
                   />
                 </>
               )}
+              <LeaveTripButton tripId={tripId} labels={leaveLabels} />
             </div>
           </div>
           <TripTabBar tripId={tripId} labels={navLabels} />
