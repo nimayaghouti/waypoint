@@ -91,6 +91,11 @@ enum TripRole {
   VIEWER
 }
 
+enum TripVisibility {
+  PRIVATE
+  PUBLIC
+}
+
 model Trip {
   id            String        @id @default(cuid())
   name          String
@@ -109,8 +114,12 @@ model Trip {
   places          Place[]
   expenses        Expense[]
   settlements     Settlement[]
-  timezone String @default("UTC")
+  
+  timezone        String @default("UTC")
   defaultCurrency String @default("USD")
+  
+  visibility      TripVisibility @default(PRIVATE)
+  maxMembers      Int?
   
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
