@@ -4,7 +4,7 @@ import { ChevronUp, Wallet } from 'lucide-react';
 
 import { useFormatter } from 'next-intl';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import UserDisplay from '@/components/shared/UserDisplay';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -16,17 +16,10 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 
+import { MemberBalance } from '@/lib/settlement';
 import { cn } from '@/lib/utils';
 
 import SettleUpModal from './SettleUpModal';
-
-interface MemberBalance {
-  userId: string;
-  name: string;
-  image: string | null;
-  netBalance: number;
-  currency: string;
-}
 
 interface Props {
   balances: MemberBalance[];
@@ -51,15 +44,15 @@ function BalanceRow({
 }) {
   return (
     <div className="flex items-center justify-between py-1 text-sm">
-      <div className="flex items-center gap-2">
-        <Avatar className="size-6">
-          <AvatarImage src={balance.image || undefined} />
-          <AvatarFallback className="text-[10px]">
-            {balance.name.charAt(0)}
-          </AvatarFallback>
-        </Avatar>
-        <span className="font-medium truncate max-w-25">{balance.name}</span>
-      </div>
+      <UserDisplay
+        user={
+          balance.userId
+            ? { name: balance.name, email: '', image: balance.image }
+            : null
+        }
+        deletedLabel={labels.deletedUser}
+        textClassName="max-w-25"
+      />
 
       <div className="flex flex-col items-end gap-0.5">
         {balance.netBalance !== 0 && (
@@ -186,7 +179,6 @@ export default function BalancesSummary({
                 <SettleUpModal
                   tripId={tripId}
                   balances={balances}
-                  currency={currency}
                   labels={labels}
                   canEdit={canEdit}
                 />
@@ -199,8 +191,8 @@ export default function BalancesSummary({
   }
 
   return (
-    <div className="md:hidden fixed inset-x-0 bottom-0 z-40 border-t border-border/60 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-      <div className="mx-auto w-full max-w-4xl px-2 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+    <div className="lg:hidden fixed inset-x-0 bottom-0 z-40 border-t border-border/60 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+      <div className="w-full max-w-3xl mx-auto px-2 sm:px-8 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
         <div className="w-full flex items-center gap-2">
           <Sheet>
             <SheetTrigger asChild>
@@ -225,7 +217,7 @@ export default function BalancesSummary({
 
             <SheetContent
               side="bottom"
-              className="h-auto! max-h-[85vh]! rounded-t-3xl px-0 flex flex-col gap-0 overflow-hidden"
+              className="h-auto! max-w-3xl max-h-[85vh]! rounded-t-3xl px-0 mx-auto flex flex-col gap-0 overflow-hidden"
             >
               <SheetHeader className="px-6 text-start shrink-0">
                 <SheetTitle className="flex items-center gap-2">
@@ -257,7 +249,6 @@ export default function BalancesSummary({
                   <SettleUpModal
                     tripId={tripId}
                     balances={balances}
-                    currency={currency}
                     labels={labels}
                     canEdit={canEdit}
                   />
@@ -271,7 +262,6 @@ export default function BalancesSummary({
               <SettleUpModal
                 tripId={tripId}
                 balances={balances}
-                currency={currency}
                 labels={labels}
                 canEdit={canEdit}
               />
