@@ -3,6 +3,8 @@ import * as jalali from 'date-fns-jalali';
 import { faIR } from 'date-fns-jalali/locale/fa-IR';
 import { enUS } from 'date-fns/locale';
 
+export { toLocaleDigits } from './utils';
+
 type DateFnsModule = typeof gregorian;
 
 export type SupportedLocale = 'en' | 'fa';
@@ -38,13 +40,6 @@ export function getWeekdayLabels(locale: string): string[] {
   return locale === 'fa'
     ? ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج']
     : ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-}
-
-const PERSIAN_DIGITS = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-
-export function toLocaleDigits(value: string, locale: string): string {
-  if (locale !== 'fa') return value;
-  return value.replace(/[0-9]/g, digit => PERSIAN_DIGITS[Number(digit)]);
 }
 
 export function toISODateKey(date: Date): string {
