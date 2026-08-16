@@ -12,3 +12,10 @@ export function getUserDisplayName(
   if (!user) return deletedLabel;
   return user.name || user.email?.split('@')[0] || deletedLabel;
 }
+
+const EASTERN_DIGITS = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+
+export function toLocaleDigits(value: string, locale: string): string {
+  if (locale !== 'fa') return value;
+  return value.replace(/[0-9]/g, digit => EASTERN_DIGITS[Number(digit)]);
+}

@@ -6,7 +6,7 @@ import { AuthError } from 'next-auth';
 import { getTranslations } from 'next-intl/server';
 import * as z from 'zod';
 
-import { auth, signIn } from '@/auth';
+import { auth, signIn, unstable_update } from '@/auth';
 
 import { verifyAltchaPayload } from '@/lib/altcha';
 import {
@@ -147,6 +147,31 @@ export async function verifyEmailTokenAction(token: string) {
     });
     if (!user) return { error: t('userNotFound') };
 
+    if (dbToken.newEmail) {
+      const taken = await prisma.user.findUnique({
+        where: { email: dbToken.newEmail },
+      });
+      if (taken) return { error: t('emailTaken') };
+
+      await prisma.$transaction([
+        prisma.user.update({
+          where: { id: user.id },
+          data: { email: dbToken.newEmail, emailVerified: new Date() },
+        }),
+        prisma.emailVerificationToken.update({
+          where: { id: dbToken.id },
+          data: { usedAt: new Date() },
+        }),
+      ]);
+
+      const activeSession = await auth();
+      if (activeSession?.user?.id === user.id) {
+        await unstable_update({ user: { email: dbToken.newEmail } });
+      }
+
+      return { success: t('emailChangeSuccess') };
+    }
+
     await prisma.$transaction([
       prisma.user.update({
         where: { id: user.id },
@@ -248,7 +273,7 @@ export async function resetPasswordAction(formData: FormData, token: string) {
     await prisma.$transaction([
       prisma.user.update({
         where: { id: dbToken.userId },
-        data: { password: hashedPassword },
+        data: { password: hashedPassword, passwordChangedAt: new Date() },
       }),
       prisma.passwordResetToken.update({
         where: { id: dbToken.id },
