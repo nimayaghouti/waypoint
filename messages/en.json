@@ -433,6 +433,12 @@
     "aiSearchEmpty": "No matching places found in your saved list.",
     "similarityScore": "{score}% Match"
   },
+  "PlacePicker": {
+    "title": "Select a Place",
+    "searchPlaceholder": "Search saved places...",
+    "noPlaces": "No places saved in this trip yet.",
+    "noResults": "No places match your search."
+  },
   "Expenses": {
     "title": "Expenses",
     "description": "Track who paid what and calculate everyone's balance.",
