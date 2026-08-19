@@ -162,6 +162,9 @@ export async function verifyEmailTokenAction(token: string) {
           where: { id: dbToken.id },
           data: { usedAt: new Date() },
         }),
+        prisma.account.deleteMany({
+          where: { userId: user.id, provider: 'google' },
+        }),
       ]);
 
       const activeSession = await auth();

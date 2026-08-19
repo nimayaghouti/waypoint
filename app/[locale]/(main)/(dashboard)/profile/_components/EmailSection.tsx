@@ -17,6 +17,7 @@ interface Props {
   currentEmail: string;
   isVerified: boolean;
   hasPassword: boolean;
+  isGoogleConnected: boolean;
   locale: string;
   labels: Record<string, string>;
 }
@@ -25,6 +26,7 @@ export default function EmailSection({
   currentEmail,
   isVerified,
   hasPassword,
+  isGoogleConnected,
   locale,
   labels,
 }: Props) {
@@ -152,6 +154,11 @@ export default function EmailSection({
                 </p>
               )}
             </div>
+          )}
+          {isGoogleConnected && (
+            <p className="text-xs text-amber-600">
+              {labels.googleUnlinkWarning}
+            </p>
           )}
           <Button
             type="submit"

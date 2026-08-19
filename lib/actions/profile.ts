@@ -1,12 +1,14 @@
 'use server';
 
 import bcrypt from 'bcryptjs';
-import { getTranslations } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { revalidatePath } from 'next/cache';
+import { cookies } from 'next/headers';
 import * as z from 'zod';
 
-import { auth, unstable_update } from '@/auth';
+import { auth, signIn, unstable_update } from '@/auth';
 
+import { GOOGLE_LINK_INTENT_COOKIE } from '@/constants/auth';
 import {
   deleteImageFromCloudinary,
   uploadImageToCloudinary,
@@ -285,4 +287,23 @@ export async function setOrChangePasswordAction(formData: FormData) {
     console.error(error);
     return { error: 'Server error' };
   }
+}
+
+export async function initiateGoogleLinkAction() {
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error('UNAUTHORIZED');
+  }
+
+  const locale = await getLocale();
+  const cookieStore = await cookies();
+  cookieStore.set(GOOGLE_LINK_INTENT_COOKIE, `${session.user.id}:${locale}`, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 60 * 10,
+    path: '/',
+  });
+
+  await signIn('google', { redirectTo: '/profile' });
 }
