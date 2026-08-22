@@ -7,6 +7,7 @@ import { redirect } from '@/i18n/navigation';
 
 import { auth } from '@/auth';
 
+import RevalidateOnFocus from '@/components/shared/RevalidateOnFocus';
 import { Card, CardContent } from '@/components/ui/card';
 
 import prisma from '@/lib/prisma';
@@ -44,6 +45,7 @@ export default async function TripPollsPage({
 
   const t = await getTranslations('Polls');
   const tVal = await getTranslations('PollValidations');
+  const tPicker = await getTranslations('PlacePicker');
 
   const labels = {
     title: t('title'),
@@ -79,8 +81,12 @@ export default async function TripPollsPage({
     alreadyVotedError: t('alreadyVotedError'),
     noVoteToCancelError: t('noVoteToCancelError'),
     alreadyClosedError: t('alreadyClosedError'),
+    timePlaceholder: t('timePlaceholder'),
     closePollDialogTitle: t('closePollDialogTitle'),
     closePollDialogCancel: t('closePollDialogCancel'),
+    optionDraftPlaceholder: t('optionDraftPlaceholder'),
+    removePlaceLabel: t('removePlaceLabel'),
+    emptyOptionFallback: t('emptyOptionFallback'),
   };
 
   const valLabels = {
@@ -92,7 +98,14 @@ export default async function TripPollsPage({
     closesAtFuture: tVal('closesAtFuture'),
   };
 
-  const [member, polls, trip] = await Promise.all([
+  const pickerLabels = {
+    title: tPicker('title'),
+    searchPlaceholder: tPicker('searchPlaceholder'),
+    noPlaces: tPicker('noPlaces'),
+    noResults: tPicker('noResults'),
+  };
+
+  const [member, polls, trip, savedPlaces] = await Promise.all([
     prisma.tripMember.findUnique({
       where: { tripId_userId: { tripId, userId: session.user.id } },
     }),
@@ -100,7 +113,10 @@ export default async function TripPollsPage({
       where: { tripId },
       include: {
         options: {
-          include: { votes: true },
+          include: {
+            votes: true,
+            place: { select: { name: true, address: true } },
+          },
         },
       },
       orderBy: { createdAt: 'desc' },
@@ -109,6 +125,11 @@ export default async function TripPollsPage({
       where: { id: tripId },
       select: { timezone: true },
     }),
+    prisma.place.findMany({
+      where: { tripId },
+      select: { id: true, name: true, address: true },
+      orderBy: { createdAt: 'desc' },
+    }),
   ]);
 
   if (!trip) return null;
@@ -116,45 +137,50 @@ export default async function TripPollsPage({
   const currentUserRole = member?.role ?? 'VIEWER';
 
   return (
-    <div className="flex flex-col gap-6 max-w-3xl mx-auto">
-      <div className="flex flex-wrap justify-between items-end gap-4">
-        <div className="space-y-2">
-          <h2 className="text-2xl font-bold">{t('title')}</h2>
-          <p className="text-muted-foreground">{t('description')}</p>
+    <>
+      <RevalidateOnFocus />
+      <div className="flex flex-col gap-6 max-w-3xl mx-auto">
+        <div className="flex flex-wrap justify-between items-end gap-4">
+          <div className="space-y-2">
+            <h2 className="text-2xl font-bold">{t('title')}</h2>
+            <p className="text-muted-foreground">{t('description')}</p>
+          </div>
+          <CreatePollModal
+            locale={locale}
+            tripId={tripId}
+            tripTimezone={trip.timezone}
+            labels={labels}
+            valLabels={valLabels}
+            savedPlaces={savedPlaces}
+            pickerLabels={pickerLabels}
+          />
         </div>
-        <CreatePollModal
-          locale={locale}
-          tripId={tripId}
-          tripTimezone={trip.timezone}
-          labels={labels}
-          valLabels={valLabels}
-        />
-      </div>
 
-      {polls.length === 0 ? (
-        <Card className="border-dashed bg-muted/30">
-          <CardContent className="flex flex-col items-center justify-center py-16 text-center">
-            <div className="p-4 bg-primary/10 rounded-full text-primary mb-4">
-              <BarChart2 className="size-8" />
-            </div>
-            <h2 className="text-xl font-semibold mb-2">{t('emptyTitle')}</h2>
-            <p className="text-muted-foreground">{t('emptyDesc')}</p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="flex flex-col gap-6">
-          {polls.map(poll => (
-            <PollCard
-              key={poll.id}
-              tripId={tripId}
-              currentUserId={session.user.id!}
-              currentUserRole={currentUserRole}
-              poll={poll}
-              labels={labels}
-            />
-          ))}
-        </div>
-      )}
-    </div>
+        {polls.length === 0 ? (
+          <Card className="border-dashed bg-muted/30">
+            <CardContent className="flex flex-col items-center justify-center py-16 text-center">
+              <div className="p-4 bg-primary/10 rounded-full text-primary mb-4">
+                <BarChart2 className="size-8" />
+              </div>
+              <h2 className="text-xl font-semibold mb-2">{t('emptyTitle')}</h2>
+              <p className="text-muted-foreground">{t('emptyDesc')}</p>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="flex flex-col gap-6">
+            {polls.map(poll => (
+              <PollCard
+                key={poll.id}
+                tripId={tripId}
+                currentUserId={session.user.id!}
+                currentUserRole={currentUserRole}
+                poll={poll}
+                labels={labels}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </>
   );
 }
