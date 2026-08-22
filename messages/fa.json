@@ -338,12 +338,16 @@
     "alreadyVotedError": "شما قبلاً رأی داده‌اید. برای تغییر رأی، ابتدا رأی خودتان را لغو کنید.",
     "noVoteToCancelError": "شما رأیی برای لغو کردن ندارید.",
     "alreadyClosedError": "این رأی‌گیری از قبل بسته شده است.",
+    "timePlaceholder": "--:--",
     "closePollDialogTitle": "این رأی‌گیری زودتر بسته شود؟",
-    "closePollDialogCancel": "انصراف"
+    "closePollDialogCancel": "انصراف",
+    "optionDraftPlaceholder": "افزودن گزینه...",
+    "removePlaceLabel": "حذف مکان",
+    "emptyOptionFallback": "گزینه حذف‌شده"
   },
   "PollValidations": {
     "questionMin": "سوال باید حداقل ۵ کاراکتر باشد.",
-    "optionRequired": "گزینه نمی‌تواند خالی باشد.",
+    "optionRequired": "هر گزینه باید متن یا یک مکان لینک‌شده داشته باشد.",
     "minOptions": "حداقل ۲ گزینه وارد کنید.",
     "closesAtRequired": "لطفاً زمان پایان رأی‌گیری را انتخاب کنید.",
     "closesAtInvalid": "زمان پایان رأی‌گیری معتبر نیست.",

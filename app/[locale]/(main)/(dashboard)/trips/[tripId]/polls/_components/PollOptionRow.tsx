@@ -2,12 +2,15 @@
 
 import { CheckCircle2, CheckSquare2, Circle, Square } from 'lucide-react';
 
+import PlaceMiniCard from '@/components/places/PlaceMiniCard';
 import { Checkbox } from '@/components/ui/checkbox';
 
 import { cn } from '@/lib/utils';
 
 interface PollOptionRowProps {
   label: string;
+  place?: { name: string; address: string | null } | null;
+  emptyOptionFallback: string;
   pollType: 'SINGLE' | 'MULTI';
   percentage: number;
   percentageLabel: string;
@@ -20,6 +23,8 @@ interface PollOptionRowProps {
 
 export default function PollOptionRow({
   label,
+  place,
+  emptyOptionFallback,
   pollType,
   percentage,
   percentageLabel,
@@ -29,15 +34,20 @@ export default function PollOptionRow({
   isPending,
   onActivate,
 }: PollOptionRowProps) {
-  const isMultiSelecting = pollType === 'MULTI' && canInteract;
+  const hasLabel = label.trim().length > 0;
+  const isEmptyOption = !hasLabel && !place;
+
+  const effectiveCanInteract = canInteract && !isEmptyOption;
+  const isMultiSelecting = pollType === 'MULTI' && effectiveCanInteract;
 
   const rowClassName = cn(
     'relative flex items-center justify-between w-full p-3 rounded-lg border transition-all text-sm overflow-hidden',
     isMine
       ? 'border-primary/50 text-primary-foreground'
       : 'border-border/50 bg-card text-foreground',
-    canInteract && 'hover:bg-muted/50 cursor-pointer',
-    !canInteract && 'cursor-default',
+    effectiveCanInteract && 'hover:bg-muted/50 cursor-pointer',
+    !effectiveCanInteract && 'cursor-default',
+    isEmptyOption && !isMine && 'opacity-60',
     isPending && 'opacity-70 pointer-events-none',
   );
 
@@ -69,12 +79,29 @@ export default function PollOptionRow({
         style={{ width: `${percentage}%` }}
       />
 
-      <div className="relative z-10 flex items-center gap-3">
+      <div className="relative z-10 flex items-center gap-3 min-w-0 flex-1 me-3">
         {icon}
-        <span className="font-medium text-start">{label}</span>
+        <div className="grow flex flex-col gap-1.5 text-start">
+          {hasLabel ? (
+            <span className="font-medium">{label}</span>
+          ) : !place ? (
+            <span className="font-medium italic text-muted-foreground brightness-125">
+              {emptyOptionFallback}
+            </span>
+          ) : null}
+          {place && (
+            <div className="pointer-events-none">
+              <PlaceMiniCard
+                name={place.name}
+                address={place.address}
+                className="p-1.5 bg-background/50 border-0 shadow-none"
+              />
+            </div>
+          )}
+        </div>
       </div>
 
-      <div className="relative z-10 flex items-center gap-3 text-xs font-semibold">
+      <div className="relative z-10 flex items-center gap-3 text-xs font-semibold shrink-0">
         <span>{percentageLabel}%</span>
       </div>
     </>
@@ -83,11 +110,11 @@ export default function PollOptionRow({
   if (pollType === 'MULTI') {
     return (
       <div
-        role={canInteract ? 'button' : undefined}
-        tabIndex={canInteract ? 0 : undefined}
-        onClick={canInteract ? onActivate : undefined}
+        role={effectiveCanInteract ? 'button' : undefined}
+        tabIndex={effectiveCanInteract ? 0 : undefined}
+        onClick={effectiveCanInteract ? onActivate : undefined}
         onKeyDown={e => {
-          if (canInteract && (e.key === 'Enter' || e.key === ' ')) {
+          if (effectiveCanInteract && (e.key === 'Enter' || e.key === ' ')) {
             e.preventDefault();
             onActivate();
           }
@@ -103,7 +130,7 @@ export default function PollOptionRow({
     <button
       type="button"
       onClick={onActivate}
-      disabled={!canInteract}
+      disabled={!effectiveCanInteract}
       className={rowClassName}
     >
       {content}

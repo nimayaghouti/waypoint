@@ -1,17 +1,22 @@
 'use client';
 
-import { Plus, Trash2 } from 'lucide-react';
+import { MapPin, Plus, Trash2 } from 'lucide-react';
 
-import { useState, useTransition } from 'react';
+import { useRef, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+import PlaceBadge from '@/components/places/PlaceBadge';
+import PlacePickerPopover, {
+  PickablePlace,
+} from '@/components/places/PlacePickerPopover';
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -23,6 +28,7 @@ import { TimePicker } from '@/components/ui/time-picker';
 
 import { createPollAction } from '@/lib/actions/poll';
 import { zonedTimeToUtc } from '@/lib/date-helpers';
+import { cn } from '@/lib/utils';
 import { getPollSchemas } from '@/lib/validations/poll';
 
 interface Props {
@@ -31,6 +37,14 @@ interface Props {
   tripTimezone: string;
   labels: Record<string, string>;
   valLabels: Record<string, string>;
+  savedPlaces: PickablePlace[];
+  pickerLabels: Record<string, string>;
+}
+
+interface CommittedOption {
+  id: number;
+  value: string;
+  place: PickablePlace | null;
 }
 
 function getMinClosesAt() {
@@ -46,6 +60,8 @@ export default function CreatePollModal({
   tripTimezone,
   labels,
   valLabels,
+  savedPlaces,
+  pickerLabels,
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -57,10 +73,13 @@ export default function CreatePollModal({
   const [question, setQuestion] = useState('');
   const [isMulti, setIsMulti] = useState(false);
   const [closesAt, setClosesAt] = useState('');
-  const [options, setOptions] = useState([
-    { id: 1, value: '' },
-    { id: 2, value: '' },
-  ]);
+
+  const [options, setOptions] = useState<CommittedOption[]>([]);
+  const [draftValue, setDraftValue] = useState('');
+  const [draftPlace, setDraftPlace] = useState<PickablePlace | null>(null);
+  const [isDraftFocused, setIsDraftFocused] = useState(false);
+
+  const draftInputRef = useRef<HTMLInputElement>(null);
 
   const { CreatePollSchema } = getPollSchemas(valLabels);
 
@@ -70,9 +89,11 @@ export default function CreatePollModal({
   const minDateKey = minClosesAt.slice(0, 10);
   const minTime =
     closesDateKey === minDateKey ? minClosesAt.slice(11, 16) : undefined;
-  const filledOptions = options
-    .map(o => ({ ...o, value: o.value.trim() }))
-    .filter(o => o.value.length > 0);
+
+  const canCommitDraft = draftValue.trim().length > 0 || Boolean(draftPlace);
+
+  const isBadgeInsideInput =
+    Boolean(draftPlace) && draftValue.trim().length === 0 && !isDraftFocused;
 
   const handleDateChange = (dateKey: string) => {
     const effectiveMinTimeForDate =
@@ -92,27 +113,35 @@ export default function CreatePollModal({
     setClosesAt(`${closesDateKey || minDateKey}T${time}`);
   };
 
-  const handleAddOption = () => {
-    setOptions([...options, { id: Date.now(), value: '' }]);
+  const handleCommitDraft = () => {
+    if (!canCommitDraft) return;
+    setOptions(prev => [
+      ...prev,
+      { id: Date.now(), value: draftValue.trim(), place: draftPlace },
+    ]);
+    setDraftValue('');
+    setDraftPlace(null);
+    draftInputRef.current?.focus();
+  };
+
+  const handleDraftKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleCommitDraft();
+    }
   };
 
   const handleRemoveOption = (id: number) => {
-    if (options.length <= 2) return;
-    setOptions(options.filter(opt => opt.id !== id));
-  };
-
-  const handleOptionChange = (id: number, value: string) => {
-    setOptions(options.map(opt => (opt.id === id ? { ...opt, value } : opt)));
+    setOptions(prev => prev.filter(opt => opt.id !== id));
   };
 
   const resetForm = () => {
     setQuestion('');
     setIsMulti(false);
     setClosesAt('');
-    setOptions([
-      { id: 1, value: '' },
-      { id: 2, value: '' },
-    ]);
+    setOptions([]);
+    setDraftValue('');
+    setDraftPlace(null);
   };
 
   const handleSubmit = async (e: React.SubmitEvent) => {
@@ -129,10 +158,16 @@ export default function CreatePollModal({
       );
       closesAtUtcIso = exactUtcDate.toISOString();
     }
+
+    const preparedOptions = options.map(opt => ({
+      value: opt.value,
+      placeId: opt.place?.id ?? null,
+    }));
+
     const data = {
       question,
       type: isMulti ? 'MULTI' : 'SINGLE',
-      options: filledOptions.map(o => ({ value: o.value })),
+      options: preparedOptions,
       closesAt: closesAtUtcIso,
     };
 
@@ -176,14 +211,18 @@ export default function CreatePollModal({
           {labels.newPollButton}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-125 max-h-[90vh] overflow-y-auto px-0">
-        <ScrollArea className="h-[80vh] px-2">
-          <DialogHeader className="px-2">
-            <DialogTitle>{labels.createTitle}</DialogTitle>
-            <DialogDescription>{labels.createDesc}</DialogDescription>
-          </DialogHeader>
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto gap-0 px-0">
+        <DialogHeader className="px-4 pb-4">
+          <DialogTitle>{labels.createTitle}</DialogTitle>
+          <DialogDescription>{labels.createDesc}</DialogDescription>
+        </DialogHeader>
 
+        <ScrollArea
+          className="px-2"
+          viewportProps={{ className: 'h-auto! max-h-[60vh]' }}
+        >
           <form
+            id="create-poll-form"
             onSubmit={handleSubmit}
             className="flex flex-col gap-6 mt-4 px-2"
             noValidate
@@ -244,7 +283,7 @@ export default function CreatePollModal({
                   onChange={handleTimeChange}
                   locale={locale}
                   minTime={minTime}
-                  placeholder="--:--"
+                  placeholder={labels.timePlaceholder}
                   disabled={loading || isPending || !closesDateKey}
                   className="w-32 grow"
                 />
@@ -261,65 +300,138 @@ export default function CreatePollModal({
               )}
             </div>
 
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 mb-6">
               <label className="text-sm font-medium">
                 {labels.optionsLabel}
               </label>
-              {options.map((opt, index) => (
-                <div key={opt.id} className="flex items-center gap-2">
+
+              <div className="flex items-center gap-2 mb-2">
+                <div className="relative flex-1 min-w-0">
                   <Input
-                    value={opt.value}
-                    onChange={e => handleOptionChange(opt.id, e.target.value)}
-                    placeholder={`${labels.optionsLabel} ${index + 1}`}
+                    ref={draftInputRef}
+                    value={draftValue}
+                    onChange={e => setDraftValue(e.target.value)}
+                    onFocus={() => setIsDraftFocused(true)}
+                    onBlur={() => setIsDraftFocused(false)}
+                    onKeyDown={handleDraftKeyDown}
+                    placeholder={labels.optionDraftPlaceholder}
                     disabled={loading || isPending}
+                    className={cn(isBadgeInsideInput && 'ps-28')}
                   />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="shrink-0 text-muted-foreground hover:text-destructive cursor-pointer"
-                    disabled={options.length <= 2 || loading || isPending}
-                    onClick={() => handleRemoveOption(opt.id)}
-                  >
-                    <Trash2 className="size-4" />
-                  </Button>
+                  {draftPlace && (
+                    <div
+                      onMouseDown={e => e.preventDefault()}
+                      className={cn(
+                        'absolute inset-s-2 flex items-center transition-all duration-150',
+                        isBadgeInsideInput
+                          ? 'top-1/2 -translate-y-1/2'
+                          : '-bottom-6 translate-y-1',
+                      )}
+                    >
+                      <PlaceBadge
+                        place={draftPlace}
+                        onRemove={() => setDraftPlace(null)}
+                        removeLabel={labels.removePlaceLabel}
+                        className="max-w-24"
+                      />
+                    </div>
+                  )}
                 </div>
-              ))}
+
+                <PlacePickerPopover
+                  places={savedPlaces}
+                  labels={{
+                    title: pickerLabels.title,
+                    searchPlaceholder: pickerLabels.searchPlaceholder,
+                    noPlaces: pickerLabels.noPlaces,
+                    noResults: pickerLabels.noResults,
+                  }}
+                  onSelect={place => setDraftPlace(place)}
+                  trigger={
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      disabled={loading || isPending}
+                      className="shrink-0 text-muted-foreground hover:text-primary cursor-pointer border-dashed border-border/60 hover:border-primary/50"
+                    >
+                      <MapPin className="size-4" />
+                    </Button>
+                  }
+                />
+
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="outline"
+                  disabled={loading || isPending || !canCommitDraft}
+                  onClick={handleCommitDraft}
+                  aria-label={labels.addOption}
+                  className="shrink-0 cursor-pointer"
+                >
+                  <Plus className="size-4" />
+                </Button>
+              </div>
+
+              {options.length > 0 && (
+                <div className="flex flex-col gap-2 mt-4">
+                  {options.map(opt => (
+                    <div
+                      key={opt.id}
+                      className="flex items-center justify-between gap-2 p-2 rounded-lg border border-border/50 bg-muted/10"
+                    >
+                      <div className="flex flex-col gap-1.5 min-w-0 flex-1">
+                        {opt.value && (
+                          <span className="text-sm wrap-break-word">
+                            {opt.value}
+                          </span>
+                        )}
+                        {opt.place && (
+                          <PlaceBadge
+                            place={opt.place}
+                            className="max-w-full self-start"
+                          />
+                        )}
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="shrink-0 size-7 text-muted-foreground hover:text-destructive cursor-pointer"
+                        disabled={loading || isPending}
+                        onClick={() => handleRemoveOption(opt.id)}
+                      >
+                        <Trash2 className="size-3.5" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
               {errors.options && (
                 <p className="text-xs font-bold text-destructive">
                   {errors.options[0]}
                 </p>
               )}
-
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="w-full mt-2 border-dashed cursor-pointer"
-                onClick={handleAddOption}
-                disabled={loading || isPending}
-              >
-                <Plus className="size-4 me-2" /> {labels.addOption}
-              </Button>
             </div>
-
-            <Button
-              type="submit"
-              className="cursor-pointer"
-              disabled={
-                loading ||
-                isPending ||
-                !question.trim() ||
-                !closesAt ||
-                filledOptions.length < 2
-              }
-            >
-              {loading || isPending
-                ? labels.createLoading
-                : labels.createButton}
-            </Button>
           </form>
         </ScrollArea>
+        <DialogFooter className="px-4 pb-0 m-0 border-t border-border/50 bg-muted/10">
+          <Button
+            type="submit"
+            form="create-poll-form"
+            className="w-full cursor-pointer"
+            disabled={
+              loading ||
+              isPending ||
+              !question.trim() ||
+              !closesAt ||
+              options.length < 2
+            }
+          >
+            {loading || isPending ? labels.createLoading : labels.createButton}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
