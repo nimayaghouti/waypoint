@@ -338,12 +338,16 @@
     "alreadyVotedError": "You've already voted. Cancel your vote first if you want to change it.",
     "noVoteToCancelError": "You don't have a vote to cancel.",
     "alreadyClosedError": "This poll is already closed.",
+    "timePlaceholder": "--:--",
     "closePollDialogTitle": "Close this poll early?",
-    "closePollDialogCancel": "Cancel"
+    "closePollDialogCancel": "Cancel",
+    "optionDraftPlaceholder": "Add poll option...",
+    "removePlaceLabel": "Remove place",
+    "emptyOptionFallback": "Removed option"
   },
   "PollValidations": {
     "questionMin": "Question must be at least 5 characters.",
-    "optionRequired": "Option cannot be empty.",
+    "optionRequired": "Each option needs either text or a linked place.",
     "minOptions": "Provide at least 2 options.",
     "closesAtRequired": "Please select a closing date and time.",
     "closesAtInvalid": "The selected date and time is invalid.",
