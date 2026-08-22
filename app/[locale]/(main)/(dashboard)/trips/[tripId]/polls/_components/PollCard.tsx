@@ -33,6 +33,7 @@ interface PollData {
   options: {
     id: string;
     label: string;
+    place?: { name: string; address: string | null } | null;
     votes: { userId: string }[];
   }[];
 }
@@ -179,6 +180,8 @@ export default function PollCard({
             <PollOptionRow
               key={option.id}
               label={option.label}
+              place={option.place}
+              emptyOptionFallback={labels.emptyOptionFallback}
               pollType={poll.type}
               percentage={percentage}
               percentageLabel={format.number(Math.round(percentage))}
