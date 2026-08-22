@@ -6,9 +6,14 @@ export const getPollSchemas = (t: Record<string, string>) => {
     type: z.enum(['SINGLE', 'MULTI']),
     options: z
       .array(
-        z.object({
-          value: z.string().min(1, { message: t.optionRequired }),
-        }),
+        z
+          .object({
+            value: z.string().optional(),
+            placeId: z.string().optional().nullable(),
+          })
+          .refine(opt => Boolean(opt.value?.trim()) || Boolean(opt.placeId), {
+            message: t.optionRequired,
+          }),
       )
       .min(2, { message: t.minOptions }),
     closesAt: z

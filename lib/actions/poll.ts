@@ -39,10 +39,11 @@ export async function createPollAction(
     const parsedOptions = JSON.parse(optionsJson);
     const sanitizedOptions = Array.isArray(parsedOptions)
       ? parsedOptions
-          .map((opt: { value?: unknown }) => ({
+          .map((opt: { value?: unknown; placeId?: string | null }) => ({
             value: typeof opt?.value === 'string' ? opt.value.trim() : '',
+            placeId: typeof opt?.placeId === 'string' ? opt.placeId : null,
           }))
-          .filter(opt => opt.value.length > 0)
+          .filter(opt => opt.value.length > 0 || Boolean(opt.placeId))
       : [];
 
     const data = {
@@ -58,6 +59,38 @@ export async function createPollAction(
       return { fieldErrors: z.flattenError(validatedFields.error).fieldErrors };
     }
 
+    const requestedPlaceIds = [
+      ...new Set(
+        validatedFields.data.options
+          .map(opt => opt.placeId)
+          .filter((id): id is string => Boolean(id)),
+      ),
+    ];
+
+    let validPlaceIds = new Set<string>();
+    if (requestedPlaceIds.length > 0) {
+      const validPlaces = await prisma.place.findMany({
+        where: { id: { in: requestedPlaceIds }, tripId },
+        select: { id: true },
+      });
+      validPlaceIds = new Set(validPlaces.map(p => p.id));
+    }
+
+    const finalOptions = validatedFields.data.options
+      .map(opt => {
+        const resolvedPlaceId =
+          opt.placeId && validPlaceIds.has(opt.placeId) ? opt.placeId : null;
+        return {
+          label: opt.value?.trim() || '',
+          placeId: resolvedPlaceId,
+        };
+      })
+      .filter(opt => opt.label.length > 0 || Boolean(opt.placeId));
+
+    if (finalOptions.length < 2) {
+      return { fieldErrors: { options: [t('minOptions')] } };
+    }
+
     await prisma.poll.create({
       data: {
         tripId,
@@ -65,9 +98,7 @@ export async function createPollAction(
         type: validatedFields.data.type,
         closesAt: new Date(validatedFields.data.closesAt),
         options: {
-          create: validatedFields.data.options.map(opt => ({
-            label: opt.value,
-          })),
+          create: finalOptions,
         },
       },
     });
